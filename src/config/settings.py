@@ -38,7 +38,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local domains
     "users",
-
 ]
 
 THIRD_PARTY_APPS = [
@@ -151,7 +150,6 @@ SIMPLE_JWT = {
     "ALGORITHM": "HS256",
     "SIGNING_KEY": SECRET_KEY,
     "AUTH_HEADER_TYPES": ("Bearer",),
-
 }
 
 APPEND_SLASH = False

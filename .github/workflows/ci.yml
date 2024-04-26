@@ -13,4 +13,4 @@ jobs:
       - name: Install dependencies
         run: pip install black isort
       - name: Run formatters
-        run: python -m black --check . && python -m isort --check .
+        run: pipenv run black --check . && pipenv run isort --check . --profile black
