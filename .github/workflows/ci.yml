@@ -11,6 +11,6 @@ jobs:
         with:
           python-version: '3.11' 
       - name: Install dependencies
-        run: pip install black ruff isort
+        run: pip install black isort
       - name: Run fomatters
         run: python -m black --check . && python -m isort --check .
