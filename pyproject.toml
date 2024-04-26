@@ -1,3 +1,10 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["Vita <vitay2715@gmail.com>"]
+readme = "README.md"
+
 [[source]]
 url = "https://pypi.org/simple"
 verify_ssl = true
@@ -12,6 +19,7 @@ psycopg2-binary = "2.9.9"
 python-dotenv = "1.0.1"
 
 [dev-packages]
+flake8 = "7.0.0"
 isort = "5.13.2"
 black = "24.3.0"
 
