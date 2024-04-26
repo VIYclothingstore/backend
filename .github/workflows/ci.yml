@@ -12,5 +12,5 @@ jobs:
           python-version: '3.11' 
       - name: Install dependencies
         run: pip install black isort
-      - name: Run fomatters
+      - name: Run formatters
         run: python -m black --check . && python -m isort --check .
