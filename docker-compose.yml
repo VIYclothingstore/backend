@@ -9,13 +9,13 @@ services:
       target: base
       args:
         DJANGO_ENV: development
-    command: [ "python", "-Wd", "manage.py", "runserver", "0.0.0.0:${SERVER_PORT}" ]
+    command: [ "python", "-Wd", "./src/manage.py", "runserver", "0.0.0.0:${SERVER_PORT}" ]
     ports:
       - "${SERVER_PORT}:${SERVER_PORT}"
     environment:
-      - DJANGO_SETTINGS_MODULE=src.settings
+      - DJANGO_SETTINGS_MODULE=config.settings
     volumes:
-      - "./:/usr/src/app"
+      - "./:/usr/app"
     env_file:
       - .env
     depends_on:
@@ -36,7 +36,7 @@ services:
     env_file:
       - .env
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -U admin_user -d clothing_store || exit 1" ]
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} || exit 1" ]
       interval: 5s
       timeout: 3s
       retries: 3
@@ -60,10 +60,10 @@ services:
       DB_PASSWORD: ${POSTGRES_PASSWORD}
       DB_HOST: ${DB_HOST}
       DB_PORT: ${DB_PORT}
-      DJANGO_SETTINGS_MODULE: src.config.settings
+      DJANGO_SETTINGS_MODULE: config.settings
     volumes:
-      - "./:/usr/src/app"
-    command: [ "python", "manage.py", "migrate" ]
+      - "./:/usr/app"
+    command: [ "python", "./src/manage.py", "migrate" ]
 
 volumes:
   postgres_data:

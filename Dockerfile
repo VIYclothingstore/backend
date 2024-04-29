@@ -30,13 +30,13 @@ RUN pip install "poetry==$POETRY_VERSION" \
     && poetry --version
 
 
-WORKDIR usr/src/app
+WORKDIR usr/app
 
 COPY . .
 
 # Install dependencies
-RUN poetry install
+RUN poetry install --no-root
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "./src/manage.py", "runserver", "0.0.0.0:8000"]
