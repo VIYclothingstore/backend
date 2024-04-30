@@ -21,3 +21,4 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         if request.user.role != Role.ADMIN:
             raise PermissionDenied("Arrrrr, you shall not pass!!!! ")
         return super().delete(request, *args, **kwargs)
+
