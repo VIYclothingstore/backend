@@ -43,4 +43,4 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "email", "username")
+        fields = ("id","first_name","email", "username")
