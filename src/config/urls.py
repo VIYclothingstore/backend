@@ -2,9 +2,12 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
 
+from users import views
 from users.views import UserCreateAPIView, UserRetrieveUpdateDestroyAPIView
 
 urlpatterns = [
+
+    path("ping/", views.ping, name="Hello world"),
     # ADMIN
     path("admin/", admin.site.urls),
     # TOKEN
