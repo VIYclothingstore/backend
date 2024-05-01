@@ -67,7 +67,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "email",
             "password",
             "repeat_password",
-            "role",
         )
 
     def validate(self, attrs):
@@ -85,7 +84,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             username=validated_data["username"],
-            role=validated_data["role"],
         )
         user.save()
         return user
