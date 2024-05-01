@@ -3,7 +3,8 @@ from django.urls import path
 from rest_framework_simplejwt.views import TokenObtainPairView
 
 from users import views
-from users.views import UserCreateAPIView, UserRetrieveUpdateDestroyAPIView
+from users.views import UserCreateAPIView, UserRetrieveUpdateDestroyAPIView, CustomTokenObtainPairView, \
+    CustomTokenRefreshView, UserInfoView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
@@ -15,9 +16,11 @@ urlpatterns = [
     # ADMIN
     path("admin/", admin.site.urls),
     # TOKEN
-    path("auth/token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    path("token/", CustomTokenObtainPairView.as_view(), name="token-obtain-pair"),
+    path("token/refresh/", CustomTokenRefreshView.as_view(), name="token-refresh"),
     # USER
     path("user/", UserCreateAPIView.as_view(), name="user-create"),
+    path("user/me", UserInfoView.as_view(), name="user-me"),
     path(
         "user/<int:pk>",
         UserRetrieveUpdateDestroyAPIView.as_view(),
