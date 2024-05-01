@@ -5,7 +5,7 @@ from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView
+from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -66,6 +66,15 @@ class CustomTokenRefreshView(TokenRefreshView):
                 status_code = status.HTTP_500_INTERNAL_SERVER_ERROR
 
             return Response(data=serializer.validated_data, status=status_code)
+
+
+class UserInfoView(RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = UserRetrieveUpdateDestroySerializer
+
+    def get_object(self):
+        return self.request.user
+
 
 
 class UserCreateAPIView(CreateAPIView):
