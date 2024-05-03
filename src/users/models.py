@@ -1,22 +1,9 @@
-from enum import IntEnum
-
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.db.models import EmailField
 from django.utils import timezone
 
 from .managers import CustomUserManager
-
-
-class Role(IntEnum):
-    ADMIN = 1
-    BUYER = 2
-
-
-Role_CHOICES = (
-    (1, "Admin"),
-    (2, "Buyer"),
-)
 
 
 class User(AbstractUser):
@@ -29,13 +16,6 @@ class User(AbstractUser):
     is_active = models.BooleanField(default=True)
 
     date_joined = models.DateTimeField(default=timezone.now)
-
-    role = models.PositiveSmallIntegerField(
-        blank=False,
-        null=False,
-        default=Role.BUYER,
-        choices=Role_CHOICES,
-    )
 
     objects = CustomUserManager()
 
@@ -55,11 +35,6 @@ class User(AbstractUser):
 
         return self.first_name
 
-    def get_role_name(self):
-        return {
-            Role.ADMIN: "Administrator",
-            Role.BUYER: "Senior",
-        }[Role(self.role)]
 
     def __str__(self) -> str | EmailField:
         if self.first_name and self.last_name:
