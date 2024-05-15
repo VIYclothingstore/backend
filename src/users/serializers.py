@@ -60,6 +60,7 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
+
         fields = ("email", "password", "repeat_password")
 
     def validate(self, attrs):
@@ -74,6 +75,11 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             validated_data["email"],
             validated_data["password"],
+          
+           first_name=validated_data["first_name"],
+            last_name=validated_data["last_name"],
+            username=validated_data["username"],
+
         )
         user.save()
         return user

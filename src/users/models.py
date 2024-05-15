@@ -3,7 +3,9 @@ from django.db import models
 from django.db.models import EmailField
 from django.utils import timezone
 from .managers import CustomUserManager
+
 from phonenumber_field.modelfields import PhoneNumberField
+
 
 class User(AbstractUser):
     email = models.EmailField(max_length=128, unique=True, blank=False, null=False)
@@ -32,6 +34,8 @@ class User(AbstractUser):
 
         return self.first_name
 
+      
+      
     def __str__(self) -> str | EmailField:
         if self.first_name and self.last_name:
             return self.get_full_name()
