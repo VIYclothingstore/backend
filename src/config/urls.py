@@ -1,10 +1,11 @@
 from django.contrib import admin
 from django.urls import path
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from products.views import ProductCategoryListView, ProductViewSet
 from users import views
 from users.views import UserCreateAPIView, UserRetrieveUpdateDestroyAPIView, CustomTokenObtainPairView, \
     CustomTokenRefreshView, UserInfoView
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 urlpatterns = [
     # API
@@ -25,4 +26,11 @@ urlpatterns = [
         UserRetrieveUpdateDestroyAPIView.as_view(),
         name="user-retrieve-update-destroy",
     ),
+
+    # PRODUCT
+
+    path('product/all', ProductViewSet.as_view({'get': 'list'}), name='product-all'),
+    path('product/category/', ProductCategoryListView.as_view(), name='product-category'),
+    # path('product/<int:pk>/', ProductCategoryDetailView.as_view(), name='product-category-detail'),
+
 ]
