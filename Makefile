@@ -24,13 +24,13 @@ drop_all_containers: ## Drop all containers
 	docker compose down -v --remove-orphans
 
 run_migrate: ## Run migrate
-	docker compose exec api ./manage.py migrate
+	docker compose exec api ./src/manage.py migrate
 
 make_migrate: ## Make migrate
-	docker compose exec api ./manage.py makemigrations
+	docker compose exec api ./src/manage.py makemigrations
 
 make_super_user: ## Make super user
-	docker compose exec api ./manage.py createsuperuser
+	docker compose exec api ./src/manage.py createsuperuser
 
 open_shell: ## Open shell to the app container
 	docker compose exec api bash

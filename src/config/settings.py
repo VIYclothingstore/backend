@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "products",
+    "phonenumber_field",
 ]
 
 THIRD_PARTY_APPS = [
@@ -172,3 +173,5 @@ SIMPLE_JWT = {
 
 
 APPEND_SLASH = False
+
+PHONENUMBER_DEFAULT_REGION = 'UA'
