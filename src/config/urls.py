@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 from products.views import ProductCategoryListView, ProductViewSet
 from users import views
 from users.views import UserCreateAPIView, UserRetrieveUpdateDestroyAPIView, CustomTokenObtainPairView, \
