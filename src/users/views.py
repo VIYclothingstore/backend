@@ -5,18 +5,27 @@ from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import CreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveAPIView
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveUpdateDestroyAPIView,
+    RetrieveAPIView,
+)
+from rest_framework.permissions import AllowAny
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.models import User
-from users.serializers import UserCreateSerializer, UserRetrieveUpdateDestroySerializer, \
-    CustomTokenObtainPairSerializer, CustomTokenRefreshSerializer
+from users.serializers import (
+    UserCreateSerializer,
+    UserRetrieveUpdateDestroySerializer,
+    CustomTokenObtainPairSerializer,
+    CustomTokenRefreshSerializer,
+)
 
 
 def ping(request):
-    return JsonResponse({'message': 'Hello from Django!'})
+    return JsonResponse({"message": "Hello from Django!"})
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -76,7 +85,6 @@ class UserInfoView(RetrieveAPIView):
         return self.request.user
 
 
-
 class UserCreateAPIView(CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserCreateSerializer
@@ -90,5 +98,5 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
     def delete(self, request, *args, **kwargs):
         if not request.user.is_staff:
-            raise PermissionDenied("Arrrrr, you shall not pass!!!!")
+            raise PermissionDenied("You don't have access!")
         return super().delete(request, *args, **kwargs)
