@@ -2,7 +2,10 @@ from tokenize import TokenError
 
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import TokenObtainPairSerializer, TokenRefreshSerializer
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
 
 from users.models import User
 
@@ -23,7 +26,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         email = attrs.get("email")
         password = attrs.get("password")
 
-        user = authenticate(request=self.context.get("request"), username=email, password=password)
+        user = authenticate(
+            request=self.context.get("request"), username=email, password=password
+        )
 
         if user:
             data = super().validate(attrs)
@@ -61,7 +66,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
 
-        fields = ("email", "password", "repeat_password")
+        fields = (
+            "email",
+            "password",
+            "repeat_password",
+            "first_name",
+            "last_name",
+            "surname",
+            "date_of_birth",
+            "number",
+        )
 
     def validate(self, attrs):
         password = attrs.get("password")
@@ -75,11 +89,12 @@ class UserCreateSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(
             validated_data["email"],
             validated_data["password"],
-          
-           first_name=validated_data["first_name"],
+            username=validated_data["email"],
+            first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
-            username=validated_data["username"],
-
+            surname=validated_data["surname"],
+            date_of_birth=validated_data["date_of_birth"],
+            number=validated_data["number"],
         )
         user.save()
         return user
@@ -88,4 +103,16 @@ class UserCreateSerializer(serializers.ModelSerializer):
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("id", "email")
+        fields = (
+            "id",
+            "email",
+            f"first_name",
+            "last_name",
+            "surname",
+            "date_of_birth",
+            "number",
+        )
+
+
+class ResetPasswordRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField(required=True)

@@ -390,6 +390,17 @@ phonenumbers = ["phonenumbers (>=7.0.2)"]
 phonenumberslite = ["phonenumberslite (>=7.0.2)"]
 
 [[package]]
+name = "django-rest-passwordreset"
+version = "1.4.1"
+description = "An extension of django rest framework, providing a configurable password reset strategy"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-rest-passwordreset-1.4.1.tar.gz", hash = "sha256:94ea2aa717d2a6c50898541a1177dca4ae8b74bb67460aae3fd6ae02c992ce52"},
+    {file = "django_rest_passwordreset-1.4.1-py3-none-any.whl", hash = "sha256:701f26804b6317f8ddbb1f9b2159176b65d8281e980b90db32dbd60407fb518a"},
+]
+
+[[package]]
 name = "djangorestframework"
 version = "3.15.1"
 description = "Web APIs for Django, made easy."
@@ -584,13 +595,13 @@ files = [
 
 [[package]]
 name = "phonenumberslite"
-version = "8.13.36"
+version = "8.13.37"
 description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
 optional = false
 python-versions = "*"
 files = [
-    {file = "phonenumberslite-8.13.36-py2.py3-none-any.whl", hash = "sha256:e9d7b1220a2f376d35b0b7a305fe76fe5ef077e580f7840869dbd29d9c9f74a8"},
-    {file = "phonenumberslite-8.13.36.tar.gz", hash = "sha256:d0e5fdc6c09519e53a331003db7203c9e82bd39ac676d584e297e6523d334448"},
+    {file = "phonenumberslite-8.13.37-py2.py3-none-any.whl", hash = "sha256:6b28e38ea2bc0d809c1f933f7fccb860d780bc62b9456a2754cb778a620dca76"},
+    {file = "phonenumberslite-8.13.37.tar.gz", hash = "sha256:7cdc76625e0879071ad31f4066867adbc6779ac37d574957c64a72b59b8bc82d"},
 ]
 
 [[package]]
@@ -681,13 +692,13 @@ xmp = ["defusedxml"]
 
 [[package]]
 name = "platformdirs"
-version = "4.2.1"
+version = "4.2.2"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
 optional = false
 python-versions = ">=3.8"
 files = [
-    {file = "platformdirs-4.2.1-py3-none-any.whl", hash = "sha256:17d5a1161b3fd67b390023cb2d3b026bbd40abde6fdb052dfbd3a29c3ba22ee1"},
-    {file = "platformdirs-4.2.1.tar.gz", hash = "sha256:031cd18d4ec63ec53e82dceaac0417d218a6863f7745dfcc9efe7793b7039bdf"},
+    {file = "platformdirs-4.2.2-py3-none-any.whl", hash = "sha256:2d7a1657e36a80ea911db832a8a6ece5ee53d8de21edd5cc5879af6530b1bfee"},
+    {file = "platformdirs-4.2.2.tar.gz", hash = "sha256:38b7b51f512eed9e84a22788b4bce1de17c0adb134d6becb09836e37d8654cd3"},
 ]
 
 [package.extras]
@@ -1109,4 +1120,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "6b6ad849f40f1dacfb70e8b55c5f42bb8650844836407747ffebd78c94d88e4f"
+content-hash = "a475f590d491ca67fa87c581bb166f247784750336058827281bf1d38874e53b"
