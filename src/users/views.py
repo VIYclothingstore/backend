@@ -1,27 +1,26 @@
 from tokenize import TokenError
 
+from django.core.mail import EmailMultiAlternatives
+from django.dispatch import receiver
 from django.http import JsonResponse
+from django.urls import reverse
+from django_rest_passwordreset.signals import reset_password_token_created
 from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import (
-    CreateAPIView,
-    RetrieveUpdateDestroyAPIView,
-    RetrieveAPIView,
-)
-from rest_framework.permissions import AllowAny
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.generics import (CreateAPIView, RetrieveAPIView,
+                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
 from users.models import User
-from users.serializers import (
-    UserCreateSerializer,
-    UserRetrieveUpdateDestroySerializer,
-    CustomTokenObtainPairSerializer,
-    CustomTokenRefreshSerializer,
-)
+from users.serializers import (CustomTokenObtainPairSerializer,
+                               CustomTokenRefreshSerializer,
+                               UserCreateSerializer,
+                               UserRetrieveUpdateDestroySerializer)
 
 
 def ping(request):
@@ -100,3 +99,29 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
         if not request.user.is_staff:
             raise PermissionDenied("You don't have access!")
         return super().delete(request, *args, **kwargs)
+
+
+@receiver(reset_password_token_created)
+def password_reset_token_created(instance, reset_password_token, *args, **kwargs):
+
+    email_text_message = (
+        f"Шановний {reset_password_token.user.first_name},\n\n"
+        "Ви запросили скидання пароля для свого облікового запису.\n"
+        f"Будь ласка, натисніть на наступне посилання, щоб скинути пароль:\n\n"
+        f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}?token={reset_password_token.key}\n\n"
+        "Якщо ви не запитували скидання пароля, проігноруйте цей лист.\n\n"
+        "Дякуємо,\n"
+        "Команда Вашого Online store Sport Hub"
+    )
+
+    msg = EmailMultiAlternatives(
+        # Subject:
+        "Скидання пароля для Online store Sport Hub.",
+        # Message:
+        email_text_message,
+        # From:
+        "shop_onlinee@ukr.net",
+        # To:
+        [reset_password_token.user.email],
+    )
+    msg.send()

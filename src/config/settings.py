@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "drf_spectacular",
     "phonenumber_field",
+    "django_rest_passwordreset",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
@@ -168,3 +169,10 @@ SIMPLE_JWT = {
 APPEND_SLASH = False
 
 PHONENUMBER_DEFAULT_REGION = "UA"
+
+
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASWORD")

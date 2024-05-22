@@ -1,5 +1,5 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator, MinLengthValidator
+from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.db.models import EmailField
 from django.utils import timezone

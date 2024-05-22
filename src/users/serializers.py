@@ -2,10 +2,8 @@ from tokenize import TokenError
 
 from django.contrib.auth import authenticate
 from rest_framework import serializers
-from rest_framework_simplejwt.serializers import (
-    TokenObtainPairSerializer,
-    TokenRefreshSerializer,
-)
+from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
+                                                  TokenRefreshSerializer)
 
 from users.models import User
 
