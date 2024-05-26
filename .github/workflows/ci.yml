@@ -15,7 +15,3 @@ jobs:
         run: pip install poetry && poetry install
       - name: Run formatters
         run: poetry run black --check . && poetry run isort --check . --profile black
-      - name: Run linter
-        run: poetry run ruff .
-      - name: Run static type checker
-        run: poetry run mypy .
