@@ -9,18 +9,22 @@ from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import (CreateAPIView, RetrieveAPIView,
-                                     RetrieveUpdateDestroyAPIView)
+from rest_framework.generics import (
+    CreateAPIView,
+    RetrieveAPIView,
+    RetrieveUpdateDestroyAPIView,
+)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import (TokenObtainPairView,
-                                            TokenRefreshView)
+from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.models import User
-from users.serializers import (CustomTokenObtainPairSerializer,
-                               CustomTokenRefreshSerializer,
-                               UserCreateSerializer,
-                               UserRetrieveUpdateDestroySerializer)
+from users.serializers import (
+    CustomTokenObtainPairSerializer,
+    CustomTokenRefreshSerializer,
+    UserCreateSerializer,
+    UserRetrieveUpdateDestroySerializer,
+)
 
 
 def ping(request):
@@ -103,15 +107,16 @@ class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
 
 @receiver(reset_password_token_created)
 def password_reset_token_created(instance, reset_password_token, *args, **kwargs):
-
     email_text_message = (
-        f"Шановний {reset_password_token.user.first_name},\n\n"
-        "Ви запросили скидання пароля для свого облікового запису.\n"
-        f"Будь ласка, натисніть на наступне посилання, щоб скинути пароль:\n\n"
-        f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}?token={reset_password_token.key}\n\n"
+        f"{reset_password_token.user.first_name},\n\n"
+        "Запит на скидання пароля для dfijuj облікового запису.\n"
+        f"Перейдіть за посиланням, щоб скинути пароль:\n\n"
+        # f"{settings.UI}/{settings.UI_URLS['confirm_reset_password']}"
+        f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}"
+        f"?token={reset_password_token.key}\n\n"
         "Якщо ви не запитували скидання пароля, проігноруйте цей лист.\n\n"
         "Дякуємо,\n"
-        "Команда Вашого Online store Sport Hub"
+        "З повагою команда  Online store Sport Hub"
     )
 
     msg = EmailMultiAlternatives(
