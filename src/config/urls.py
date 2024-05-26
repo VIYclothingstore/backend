@@ -3,9 +3,13 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from users import views
-from users.views import (CustomTokenObtainPairView, CustomTokenRefreshView,
-                         UserCreateAPIView, UserInfoView,
-                         UserRetrieveUpdateDestroyAPIView)
+from users.views import (
+    CustomTokenObtainPairView,
+    CustomTokenRefreshView,
+    UserCreateAPIView,
+    UserInfoView,
+    UserRetrieveUpdateDestroyAPIView,
+)
 
 urlpatterns = [
     # API
