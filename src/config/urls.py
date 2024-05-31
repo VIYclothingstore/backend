@@ -3,9 +3,14 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from users import views
-from users.views import (CustomTokenObtainPairView, CustomTokenRefreshView,
-                         UserCreateAPIView, UserInfoView,
-                         UserRetrieveUpdateDestroyAPIView)
+from users.serializers import LogoutView
+from users.views import (
+    CustomTokenObtainPairView,
+    CustomTokenRefreshView,
+    UserCreateAPIView,
+    UserInfoView,
+    UserRetrieveUpdateDestroyAPIView,
+)
 
 urlpatterns = [
     # API
@@ -19,6 +24,7 @@ urlpatterns = [
     path("auth/token/refresh/", CustomTokenRefreshView.as_view(), name="token-refresh"),
     # USER
     path("user/create/", UserCreateAPIView.as_view(), name="user-create"),
+    path("user/logout/", LogoutView.as_view(), name="logout"),
     path("user/me", UserInfoView.as_view(), name="user-me"),
     path(
         "user/<int:pk>",

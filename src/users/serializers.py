@@ -1,9 +1,15 @@
+import re
 from tokenize import TokenError
 
-from django.contrib.auth import authenticate
-from rest_framework import serializers
-from rest_framework_simplejwt.serializers import (TokenObtainPairSerializer,
-                                                  TokenRefreshSerializer)
+from django.contrib.auth import authenticate, logout
+from rest_framework import serializers, status
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from rest_framework_simplejwt.serializers import (
+    TokenObtainPairSerializer,
+    TokenRefreshSerializer,
+)
 
 from users.models import User
 
@@ -71,17 +77,44 @@ class UserCreateSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "surname",
-            "date_of_birth",
-            "number",
+            "phone_number",
         )
 
     def validate(self, attrs):
         password = attrs.get("password")
-        repeat_password = attrs.get("repeat_password")
+        repeat_password = attrs.pop("repeat_password", None)
         if password != repeat_password:
             raise serializers.ValidationError("Passwords do not match.")
-        attrs.pop("repeat_password", None)
+        self._validate_password(password)
+        self._validate_full_name(
+            attrs.get("first_name"), attrs.get("last_name"), attrs.get("surname")
+        )
+
         return attrs
+
+    @staticmethod
+    def _validate_password(password):
+        pattern = r"^(\S){6,}$"
+        if not bool(re.match(pattern, password)):
+            raise serializers.ValidationError(
+                "The password must consist of any characters and have a length of at least 6"
+            )
+
+    @staticmethod
+    def _validate_full_name(first_name, last_name, surname):
+        pattern = r"^[^\d^Ы^ы^Ё^ё^Э^э\W]+$"
+        if not bool(re.match(pattern, first_name)):
+            raise serializers.ValidationError(
+                "The first name can only contain letters and must be at least 1 character long"
+            )
+        if not bool(re.match(pattern, last_name)):
+            raise serializers.ValidationError(
+                "The last name can only contain letters and must be at least 1 character long"
+            )
+        if not bool(re.match(pattern, surname)):
+            raise serializers.ValidationError(
+                "The surname can only contain letters and must be at least 1 character long"
+            )
 
     def create(self, validated_data):
         user = User.objects.create_user(
@@ -91,11 +124,21 @@ class UserCreateSerializer(serializers.ModelSerializer):
             first_name=validated_data["first_name"],
             last_name=validated_data["last_name"],
             surname=validated_data["surname"],
-            date_of_birth=validated_data["date_of_birth"],
-            number=validated_data["number"],
+            phone_number=validated_data["phone_number"],
         )
         user.save()
         return user
+
+
+class LogoutView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        logout(request)
+
+        return Response(
+            {"message": "Successfully logged out!"}, status=status.HTTP_200_OK
+        )
 
 
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
@@ -104,13 +147,8 @@ class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "email",
-            f"first_name",
+            "first_name",
             "last_name",
             "surname",
-            "date_of_birth",
-            "number",
+            "phone_number",
         )
-
-
-class ResetPasswordRequestSerializer(serializers.Serializer):
-    email = serializers.EmailField(required=True)

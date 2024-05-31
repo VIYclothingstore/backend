@@ -1,5 +1,4 @@
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import MinLengthValidator, RegexValidator
 from django.db import models
 from django.db.models import EmailField
 from django.utils import timezone
@@ -10,38 +9,10 @@ from .managers import CustomUserManager
 
 class User(AbstractUser):
     email = models.EmailField(max_length=128, unique=True, blank=False, null=False)
-    first_name = models.CharField(
-        max_length=128,
-        blank=False,
-        null=False,
-        validators=[
-            RegexValidator(
-                r"^[^\d\W]+$",
-                "Name can only contain letters and must be at least 1 characters long ",
-            ),
-            MinLengthValidator(1, "First name must be at least 1 characters long"),
-        ],
-    )
-    surname = models.CharField(
-        max_length=128,
-        blank=False,
-        null=False,
-        validators=[
-            RegexValidator(r"^[^\d\W]+$", "Surname can only contain letters"),
-            MinLengthValidator(1, "Surname must be at least 1 characters long"),
-        ],
-    )
-    last_name = models.CharField(
-        max_length=128,
-        blank=False,
-        null=False,
-        validators=[
-            RegexValidator(r"^[^\d\W]+$", "Last name can only contain letters"),
-            MinLengthValidator(1, "Last name must be at least 1 characters long"),
-        ],
-    )
-    date_of_birth = models.DateField(blank=False, null=False)
-    number = PhoneNumberField(r"\+[0-9]{12}", blank=False, null=False)
+    first_name = models.CharField(max_length=128, blank=False, null=False)
+    surname = models.CharField(max_length=128, blank=False, null=False)
+    last_name = models.CharField(max_length=128, blank=False, null=False)
+    phone_number = PhoneNumberField(blank=False, null=False, unique=True)
 
     date_joined = models.DateTimeField(default=timezone.now)
 
