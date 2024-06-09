@@ -9,8 +9,9 @@ from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
 from rest_framework.generics import (
     CreateAPIView,
+    DestroyAPIView,
     RetrieveAPIView,
-    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
@@ -89,7 +90,7 @@ class UserCreateAPIView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class UserRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
+class UserRetrieveUpdateDestroyView(UpdateAPIView, DestroyAPIView):
     permission_classes = [IsOwner]
     serializer_class = UserRetrieveUpdateDestroySerializer
     queryset = User.objects.all()
