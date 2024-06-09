@@ -1,7 +1,7 @@
 import re
 from tokenize import TokenError
 
-from django.contrib.auth import authenticate, logout
+from django.contrib.auth import logout
 from rest_framework import serializers, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -27,19 +27,9 @@ class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
         Validate the provided credentials and returns created token (access token and refresh token)
         with added user_id field.
         """
-        email = attrs.get("email")
-        password = attrs.get("password")
-
-        user = authenticate(
-            request=self.context.get("request"), username=email, password=password
-        )
-
-        if user:
-            data = super().validate(attrs)
-            data["user_id"] = user.id
-            return data
-        else:
-            return {"message": "Invalid credentials", "code": 400}
+        data = super().validate(attrs)
+        data["user_id"] = self.user.id
+        return data
 
 
 class CustomTokenRefreshSerializer(TokenRefreshSerializer):
