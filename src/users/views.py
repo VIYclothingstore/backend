@@ -7,24 +7,19 @@ from django_rest_passwordreset.signals import reset_password_token_created
 from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
-from rest_framework.generics import (
-    CreateAPIView,
-    DestroyAPIView,
-    RetrieveAPIView,
-    UpdateAPIView,
-)
+from rest_framework.generics import (CreateAPIView, DestroyAPIView,
+                                     RetrieveAPIView, UpdateAPIView)
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from rest_framework_simplejwt.views import (TokenObtainPairView,
+                                            TokenRefreshView)
 
 from users.models import User
 from users.permission import IsOwner
-from users.serializers import (
-    CustomTokenObtainPairSerializer,
-    CustomTokenRefreshSerializer,
-    UserCreateSerializer,
-    UserRetrieveUpdateDestroySerializer,
-)
+from users.serializers import (CustomTokenObtainPairSerializer,
+                               CustomTokenRefreshSerializer,
+                               UserCreateSerializer,
+                               UserRetrieveUpdateDestroySerializer)
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):

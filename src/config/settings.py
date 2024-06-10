@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local domains
     "users",
+    "products",
     "corsheaders",
     "drf_spectacular",
     "phonenumber_field",
