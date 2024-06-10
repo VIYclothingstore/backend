@@ -4,9 +4,13 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from products.views import ProductListAPIView, ProductRetriveAPIView
 from users.serializers import LogoutView
-from users.views import (CustomTokenObtainPairView, CustomTokenRefreshView,
-                         UserCreateAPIView, UserInfoView,
-                         UserRetrieveUpdateDestroyView)
+from users.views import (
+    CustomTokenObtainPairView,
+    CustomTokenRefreshView,
+    UserCreateAPIView,
+    UserInfoView,
+    UserRetrieveUpdateDestroyView,
+)
 
 urlpatterns = [
     # API
