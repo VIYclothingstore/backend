@@ -2,33 +2,29 @@ from tokenize import TokenError
 
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
-from django.http import JsonResponse
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from requests import Request
 from rest_framework import exceptions as rf_exceptions
 from rest_framework import status
-from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import (
     CreateAPIView,
+    DestroyAPIView,
     RetrieveAPIView,
-    RetrieveUpdateDestroyAPIView,
+    UpdateAPIView,
 )
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from users.models import User
+from users.permission import IsOwner
 from users.serializers import (
     CustomTokenObtainPairSerializer,
     CustomTokenRefreshSerializer,
     UserCreateSerializer,
     UserRetrieveUpdateDestroySerializer,
 )
-
-
-def ping(request):
-    return JsonResponse({"message": "Hello from Django!"})
 
 
 class CustomTokenObtainPairView(TokenObtainPairView):
@@ -94,15 +90,21 @@ class UserCreateAPIView(CreateAPIView):
     permission_classes = (AllowAny,)
 
 
-class UserRetrieveUpdateDestroyAPIView(RetrieveUpdateDestroyAPIView):
-    queryset = User.objects.all()
+class UserRetrieveUpdateDestroyView(UpdateAPIView, DestroyAPIView):
+    permission_classes = [IsOwner]
     serializer_class = UserRetrieveUpdateDestroySerializer
-    permission_classes = (IsAuthenticated,)
+    queryset = User.objects.all()
 
-    def delete(self, request, *args, **kwargs):
-        if not request.user.is_staff:
-            raise PermissionDenied("You don't have access!")
-        return super().delete(request, *args, **kwargs)
+    def get_object(self):
+        return self.request.user
+
+    def put(self, request, *args, **kwargs):
+        partial = False
+        return self.update(request, *args, **kwargs, partial=partial)
+
+    def patch(self, request, *args, **kwargs):
+        partial = True
+        return self.update(request, *args, **kwargs, partial=partial)
 
 
 @receiver(reset_password_token_created)
