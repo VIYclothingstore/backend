@@ -161,3 +161,4 @@ cython_debug/
 notes
 .DS_Store
 .env
+gcloud-secret.json

@@ -4,7 +4,6 @@ from django.db import migrations
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("products", "0003_remove_category_slug_alter_product_sizes"),
     ]
