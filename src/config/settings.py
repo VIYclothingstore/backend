@@ -14,6 +14,11 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
+from django.conf import settings
+from google.oauth2 import service_account
+
+# from google.oauth2 import service_account
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -38,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     # Local domains
     "users",
+    "products",
     "corsheaders",
     "drf_spectacular",
     "phonenumber_field",
@@ -165,6 +171,20 @@ SIMPLE_JWT = {
     "TOKEN_OBTAIN_SERIALIZER": "user.serializers.CustomTokenObtainPairSerializer",
     "UPDATE_LAST_LOGIN": True,
 }
+
+# STORAGE
+DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
+GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME")
+
+GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
+    "/usr/app/gcloud-secret.json"
+)
+if hasattr(settings, "GS_CREDENTIALS"):
+    # GS_CREDENTIALS exists
+    print("GS_CREDENTIALS found in settings")
+else:
+    # GS_CREDENTIALS not found
+    print("GS_CREDENTIALS not found in settings")
 
 APPEND_SLASH = False
 PHONENUMBER_DEFAULT_REGION = "UA"
