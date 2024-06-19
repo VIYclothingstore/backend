@@ -1,9 +1,23 @@
 from rest_framework import serializers
 
-from .models import Product
+from .models import Picture, Product
+
+
+class PictureSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Picture
+        fields = ["image_url"]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.picture.url)
 
 
 class ProductSerializer(serializers.ModelSerializer):
+    images = PictureSerializer(many=True, read_only=True)
+
     class Meta:
         model = Product
         fields = [
@@ -14,7 +28,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "description",
             "price",
             "available",
-            "image_urls",
+            "images",
             "color",
             "size",
         ]
