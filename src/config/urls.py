@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from products.views import ProductListAPIView, ProductRetriveAPIView
+from products.views import ProductListAPIView, ProductRetrieveAPIView
 from users.serializers import LogoutView
 from users.views import (
     CustomTokenObtainPairView,
@@ -36,5 +36,7 @@ urlpatterns = [
     ),
     # PRODUCTS
     path("products/", ProductListAPIView.as_view(), name="product_list"),
-    path("products/<int:id>/", ProductRetriveAPIView.as_view(), name="product_retrive"),
+    path(
+        "products/<int:id>/", ProductRetrieveAPIView.as_view(), name="product_retrieve"
+    ),
 ]

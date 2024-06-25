@@ -1,42 +1,82 @@
+from django.core.validators import RegexValidator
 from django.db import models
+from django.db.models import ManyToManyField
 
-from products.enums import Category, Color, Gender, Size
+MEN = "Men"
+WOMEN = "Women"
 
 
-class Picture(models.Model):
-    picture = models.ImageField()
-    product = models.ForeignKey(
-        "Product", on_delete=models.CASCADE, related_name="images", null=True
+class Category(models.Model):
+    gender = models.CharField(max_length=10, choices=[(MEN, MEN), (WOMEN, WOMEN)])
+    sub_category = models.CharField(max_length=128)
+
+    def __str__(self):
+        return f"{self.gender}:{self.sub_category}"
+
+
+BLACK = "Black"
+WHITE = "White"
+BLUE = "Blue"
+COLORFUL = "Colorful"
+
+
+class Color(models.Model):
+    title = models.CharField(
+        max_length=50,
+        choices=[(BLACK, BLACK), (WHITE, WHITE), (BLUE, BLUE), (COLORFUL, COLORFUL)],
     )
 
     def __str__(self):
-        return self.picture.url
+        return f"{self.title}"
 
 
-class Product(models.Model):
-    name = models.CharField(max_length=100)
-    gender = models.CharField(
-        max_length=15,
-        default=Gender.MALE.value,
-        choices=Gender.choices(),
+class ProductSize(models.Model):
+    value = models.CharField(
+        max_length=255, validators=[RegexValidator(regex=r"^[0-9a-zA-Z]+$")]
     )
-    category = models.CharField(
-        max_length=15,
-        choices=Category.choices(),
+
+    def __str__(self):
+        return f"{self.value}"
+
+
+class ProductItem(models.Model):
+    category = models.ForeignKey(
+        Category, on_delete=models.CASCADE, related_name="items"
     )
-    description = models.TextField(max_length=1000, blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    color = models.CharField(
-        max_length=15,
-        choices=Color.choices(),
-    )
-    size = models.CharField(
-        max_length=15,
-        choices=Size.choices(),
-    )
-    available = models.BooleanField(default=True)
+    title = models.CharField(max_length=255)
+    description = models.TextField()
+    price = models.DecimalField(max_digits=6, decimal_places=2)
+    color = ManyToManyField(Color)
+    size = ManyToManyField(ProductSize)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.name
+        return f"{self.title}: {self.category}"
+
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(
+        ProductItem, on_delete=models.CASCADE, related_name="images"
+    )
+    image = models.ImageField(upload_to="products/")
+
+
+IN_STOCK = "InStock"
+SOLD = "Sold"
+
+
+class WarehouseItem(models.Model):
+    product = models.ForeignKey(
+        ProductItem, on_delete=models.CASCADE, related_name="wh_items"
+    )
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
+    size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
+    status = models.CharField(
+        max_length=10, choices=[(IN_STOCK, IN_STOCK), (SOLD, SOLD)]
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"{self.product.title}:{self.product.category}"

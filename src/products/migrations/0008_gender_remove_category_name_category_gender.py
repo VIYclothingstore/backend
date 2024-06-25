@@ -5,7 +5,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("products", "0007_color_size_alter_product_category_and_more"),
     ]

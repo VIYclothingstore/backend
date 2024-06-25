@@ -20,6 +20,7 @@ django-rest-passwordreset = "1.4.1"
 sendgrid = "*"
 certifi = "2024.2.2"
 django-storages = {extras = ["google"], version = "^1.14.3"}
+django-filter = "^24.2"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "7.0.0"
