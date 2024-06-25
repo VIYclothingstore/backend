@@ -1,16 +1,51 @@
 from django.contrib import admin
 
-from .models import Picture, Product
+from .models import (
+    Category,
+    Color,
+    ProductImage,
+    ProductItem,
+    ProductSize,
+    WarehouseItem,
+)
 
 
 class PictureInline(admin.TabularInline):
-    model = Picture
+    model = ProductImage
     extra = 1
 
 
-@admin.register(Product)
-class ProductAdmin(admin.ModelAdmin):
-    list_display = ["name", "category", "price", "available"]
-    list_filter = ["category", "available"]
-    search_fields = ["name"]
+@admin.register(ProductItem)
+class ProductItemAdmin(admin.ModelAdmin):
+    list_display = ("category", "title", "description", "price")
+    list_filter = ("category", "title", "description", "price")
+    search_fields = ("category", "title", "description", "price")
     inlines = [PictureInline]
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    fields = ["gender", "sub_category"]
+    list_display = ["gender", "sub_category"]
+    search_fields = ["gender", "sub_category"]
+
+
+@admin.register(Color)
+class ColorAdmin(admin.ModelAdmin):
+    fields = ["title"]
+    list_display = ["title"]
+    search_fields = ["title"]
+
+
+@admin.register(ProductSize)
+class SizeAdmin(admin.ModelAdmin):
+    fields = ["value"]
+    list_display = ["value"]
+    search_fields = ["value"]
+
+
+@admin.register(WarehouseItem)
+class WarehouseAdmin(admin.ModelAdmin):
+    fields = ["product", "color", "size", "status"]
+    list_display = ["product", "color", "size", "status"]
+    search_fields = ["product", "color", "size", "status"]
