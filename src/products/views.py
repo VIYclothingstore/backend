@@ -1,8 +1,8 @@
-from django.core.exceptions import ObjectDoesNotExist
-from requests import Response
-from rest_framework import generics, views
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from .models import ProductItem, WarehouseItem
+from .models import IN_STOCK, ProductItem, WarehouseItem
 from .serializers import ProductSerializer
 
 
@@ -17,11 +17,13 @@ class ProductListAPIView(generics.ListAPIView):
     serializer_class = ProductSerializer
 
 
-# ToDo (Vita): зробити нову апішку, де за id продукта можна було дивитись скільки продуктів певного кольору та розміру,
-#  бо нині рахується загальна кількість (наприклад білі кросовки пума 38 р - 5 штук, білі кросовки пума 39 - 4 штуки, чорні кросовки пума 40 р - 4ш)
+class AvailableProductStockAPIView(APIView):
 
-
-# class AvailableProductAPIView(views.APIView):
-#
-#     def get(self, request, product_id, *args, **kwargs):
-#
+    def get(self, request, *args, **kwargs):
+        cont = WarehouseItem.objects.filter(
+            product_id=kwargs["product_id"],
+            color_id=kwargs["color_id"],
+            size_id=kwargs["size_id"],
+            status=IN_STOCK,
+        ).count()
+        return Response({"count": cont})
