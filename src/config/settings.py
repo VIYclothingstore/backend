@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     # Local domains
     "users",
     "products",
+    "novaposhta",
+    "delivery",
     "corsheaders",
     "drf_spectacular",
     "phonenumber_field",
@@ -194,3 +196,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+NOVAPOSHTA_API_SETTINGS = {
+    "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
+    "API_POINT": "https://api.novaposhta.ua/v2.0/json/",
+}

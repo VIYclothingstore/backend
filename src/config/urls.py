@@ -2,6 +2,7 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
+from delivery.serializers import NovaPoshtaCityView
 from products.views import (
     AvailableProductStockAPIView,
     ProductListAPIView,
@@ -48,4 +49,5 @@ urlpatterns = [
         AvailableProductStockAPIView.as_view(),
         name="product_available_stock",
     ),
+    path("nova-poshta/cities/<str:city_name>/", NovaPoshtaCityView.as_view()),
 ]
