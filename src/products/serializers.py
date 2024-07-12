@@ -4,29 +4,30 @@ from .models import (
     IN_STOCK,
     Category,
     Color,
-    ProductImage,
+    ProductColor,
     ProductItem,
     ProductSize,
     WarehouseItem,
 )
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    image_url = serializers.SerializerMethodField()
-
-    class Meta:
-        model = ProductImage
-        fields = ["image_url"]
-
-    def get_image_url(self, obj):
-        request = self.context.get("request")
-        return request.build_absolute_uri(obj.image.url)
-
-
 class ColorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Color
         fields = "__all__"
+
+
+class ProductColorSerializer(serializers.ModelSerializer):
+    image_url = serializers.SerializerMethodField()
+    color = ColorSerializer(read_only=True, many=False)
+
+    class Meta:
+        model = ProductColor
+        fields = ["image_url", "color"]
+
+    def get_image_url(self, obj):
+        request = self.context.get("request")
+        return request.build_absolute_uri(obj.image.url)
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):
@@ -42,11 +43,10 @@ class CategorySerializer(serializers.ModelSerializer):
 
 
 class ProductSerializer(serializers.ModelSerializer):
-    images = ProductImageSerializer(
+    colors = ProductColorSerializer(
         many=True,
         read_only=True,
     )
-    color = ColorSerializer(read_only=True, many=True)
     size = ProductSizeSerializer(read_only=True, many=True)
     category = CategorySerializer(read_only=True, many=False)
 
@@ -66,9 +66,8 @@ class ProductSerializer(serializers.ModelSerializer):
             "category",
             "description",
             "price",
-            "color",
             "size",
-            "images",
+            "colors",
             "quantity",
         ]
 

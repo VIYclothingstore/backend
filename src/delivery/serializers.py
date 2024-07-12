@@ -4,20 +4,15 @@ from rest_framework.views import APIView
 from delivery.nova_post_api_client import NovaPostApiClient
 
 
-class NovaPoshtaCityView(APIView):
-    def get(self, request, city_name):
+class NovaPostaSettlementsView(APIView):
+    def get(self, request, settlement_name):
         """
-        API endpoint to retrieve information about a city using Nova Poshta API.
-
-        Args:
-            request (Request): The incoming HTTP request.
-            city_name (str): The name of the city to search for.
+        An API endpoint for receiving information about settlements using the Nova Posta API.
         """
-
         limit = request.query_params.get("limit", 50)
-        page = request.query_params.get("page", 2)
+        page = request.query_params.get("page", 1)
 
         client = NovaPostApiClient()
-        cities = client.get_city(city_name, limit, page)
+        cities = client.get_settlements(settlement_name, limit, page)
 
         return Response(data=cities)
