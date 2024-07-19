@@ -17,8 +17,6 @@ from pathlib import Path
 from django.conf import settings
 from google.oauth2 import service_account
 
-# from google.oauth2 import service_account
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +42,8 @@ INSTALLED_APPS = [
     # Local domains
     "users",
     "products",
+    "novaposhta",
+    "delivery",
     "corsheaders",
     "drf_spectacular",
     "phonenumber_field",
@@ -89,14 +89,6 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.sqlite3",
-#         "NAME": BASE_DIR / "db.sqlite3",
-#     }
-# }
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -194,3 +186,8 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+NOVAPOSHTA_API_SETTINGS = {
+    "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
+    "API_POINT": "https://api.novaposhta.ua/v2.0/json/",
+}

@@ -55,11 +55,12 @@ class ProductItem(models.Model):
         return f"{self.title}: {self.category}"
 
 
-class ProductImage(models.Model):
+class ProductColor(models.Model):
     product = models.ForeignKey(
-        ProductItem, on_delete=models.CASCADE, related_name="images"
+        ProductItem, on_delete=models.CASCADE, related_name="colors"
     )
     image = models.ImageField(upload_to="products/")
+    color = models.ForeignKey(Color, on_delete=models.CASCADE)
 
 
 IN_STOCK = "InStock"

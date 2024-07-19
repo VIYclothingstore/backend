@@ -3,15 +3,15 @@ from django.contrib import admin
 from .models import (
     Category,
     Color,
-    ProductImage,
+    ProductColor,
     ProductItem,
     ProductSize,
     WarehouseItem,
 )
 
 
-class PictureInline(admin.TabularInline):
-    model = ProductImage
+class ProductColorInline(admin.TabularInline):
+    model = ProductColor
     extra = 1
 
 
@@ -20,7 +20,7 @@ class ProductItemAdmin(admin.ModelAdmin):
     list_display = ("category", "title", "description", "price")
     list_filter = ("category", "title", "description", "price")
     search_fields = ("category", "title", "description", "price")
-    inlines = [PictureInline]
+    inlines = [ProductColorInline]
 
 
 @admin.register(Category)
