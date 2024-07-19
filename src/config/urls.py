@@ -2,7 +2,11 @@ from django.contrib import admin
 from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
-from delivery.serializers import NovaPostaSettlementsView
+from delivery.serializers import (
+    NovaPostAddressesView,
+    NovaPostSettlementsView,
+    NovaPostWarehousesView,
+)
 from products.views import (
     AvailableProductStockAPIView,
     ProductListAPIView,
@@ -37,20 +41,32 @@ urlpatterns = [
     ),
     path(
         "user/password_reset/",
-        include("django_rest_passwordreset.urls", namespace="password_reset"),
+        include("django_rest_passwordreset.urls", namespace="password-reset"),
     ),
     # PRODUCTS
-    path("products/", ProductListAPIView.as_view(), name="product_list"),
+    path("products/", ProductListAPIView.as_view(), name="product-list"),
     path(
-        "products/<int:id>/", ProductRetrieveAPIView.as_view(), name="product_retrieve"
+        "products/<int:id>/", ProductRetrieveAPIView.as_view(), name="product-retrieve"
     ),
     path(
         "products/<int:product_id>/<int:color_id>/<int:size_id>/available/",
         AvailableProductStockAPIView.as_view(),
-        name="product_available_stock",
+        name="product-available-stock",
+    ),
+    # NOVA POST
+    path(
+        "nova-post/settlements/<str:settlement_name>/",
+        NovaPostSettlementsView.as_view(),
+        name="nova-post-settlements",
     ),
     path(
-        "nova-poshta/settlements/<str:settlement_name>/",
-        NovaPostaSettlementsView.as_view(),
+        "nova-post/warehouses/<str:settlement_name>/<str:warehouse_id>/",
+        NovaPostWarehousesView.as_view(),
+        name="nova-get-warehouses",
+    ),
+    path(
+        "nova-post/search_streets/<str:street_name>/<str:ref>/",
+        NovaPostAddressesView.as_view(),
+        name="nova-search-street",
     ),
 ]
