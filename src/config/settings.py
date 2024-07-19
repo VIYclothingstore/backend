@@ -31,6 +31,10 @@ DEBUG = True
 
 ALLOWED_HOSTS = ["*"]
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://api.sporthubsstore.com",
+]
+
 # Application definition
 INSTALLED_APPS = [
     "django.contrib.admin",
