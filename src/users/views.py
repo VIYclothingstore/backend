@@ -111,7 +111,7 @@ class UserRetrieveUpdateDestroyView(UpdateAPIView, DestroyAPIView):
 def password_reset_token_created(instance, reset_password_token, *args, **kwargs):
     email_text_message = (
         f"{reset_password_token.user.first_name},\n\n"
-        "Запит на скидання пароля для dfijuj облікового запису.\n"
+        "Запит на скидання пароля для вашого облікового запису.\n"
         f"Перейдіть за посиланням, щоб скинути пароль:\n\n"
         # f"{settings.UI}/{settings.UI_URLS['confirm_reset_password']}"
         f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}"

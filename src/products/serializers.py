@@ -51,12 +51,25 @@ class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True, many=False)
 
     quantity = serializers.SerializerMethodField(
-        "get_quantity",
+        "get_quantity_color_size",
         read_only=True,
     )
 
-    def get_quantity(self, obj):
-        return obj.wh_items.filter(status=IN_STOCK).count()
+    def get_quantity_color_size(self, obj):
+        in_stock_items = obj.wh_items.filter(status=IN_STOCK)
+        quantities_color_and_sizes = {}
+
+        for item in in_stock_items:
+            key = (item.color.title, item.size.value)
+
+            if key not in quantities_color_and_sizes:
+                quantities_color_and_sizes[key] = 0
+            quantities_color_and_sizes[key] += 1
+
+        return [
+            dict(size=size, color=color, quantity=quantity)
+            for (color, size), quantity in quantities_color_and_sizes.items()
+        ]
 
     class Meta:
         model = ProductItem
