@@ -11,6 +11,7 @@ from products.views import (
     AvailableProductStockAPIView,
     ProductListAPIView,
     ProductRetrieveAPIView,
+    ProductSearchView,
 )
 from users.serializers import LogoutView
 from users.views import (
@@ -53,6 +54,7 @@ urlpatterns = [
         AvailableProductStockAPIView.as_view(),
         name="product-available-stock",
     ),
+    path("products/search/", ProductSearchView.as_view(), name="product-search"),
     # NOVA POST
     path(
         "nova-post/settlements/<str:settlement_name>/",
