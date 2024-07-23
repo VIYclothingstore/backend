@@ -49,9 +49,9 @@ INSTALLED_APPS = [
     "novaposhta",
     "delivery",
     "corsheaders",
-    "drf_spectacular",
     "phonenumber_field",
     "django_rest_passwordreset",
+    "drf_yasg",
 ]
 THIRD_PARTY_APPS = [
     "rest_framework",
