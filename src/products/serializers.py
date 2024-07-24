@@ -25,9 +25,16 @@ class ProductColorSerializer(serializers.ModelSerializer):
         model = ProductColor
         fields = ["image_url", "color"]
 
+    # def get_image_url(self, obj):
+    #     request = self.context.get("request")
+    #     return request.build_absolute_uri(obj.image.url)
+    #
     def get_image_url(self, obj):
         request = self.context.get("request")
-        return request.build_absolute_uri(obj.image.url)
+        if request:
+            return request.build_absolute_uri(obj.image.url)
+        else:
+            return None
 
 
 class ProductSizeSerializer(serializers.ModelSerializer):

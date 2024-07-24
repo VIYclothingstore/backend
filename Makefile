@@ -34,5 +34,3 @@ make_super_user: ## Make super user
 
 open_shell: ## Open shell to the app container
 	docker compose exec api bash
-
-
