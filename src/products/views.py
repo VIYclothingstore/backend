@@ -1,3 +1,5 @@
+import random
+
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.response import Response
@@ -68,4 +70,23 @@ class ProductSearchView(APIView):
         serializer = ProductSerializer(
             products, many=True, context={"request": request}
         )
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+class ProductSortingView(APIView):
+    def get(self, request):
+        sort_by = request.GET.get("sort", "popular")
+
+        if sort_by == "price_asc":
+            products = ProductItem.objects.all().order_by("price")
+        elif sort_by == "price_desc":
+            products = ProductItem.objects.all().order_by("-price")
+        elif sort_by == "popular":
+            products = list(ProductItem.objects.all())
+            random.shuffle(products)
+        else:
+            products = list(ProductItem.objects.all())
+            random.shuffle(products)
+
+        serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
