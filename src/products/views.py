@@ -1,6 +1,5 @@
 from django.db.models import Q
 from rest_framework import generics
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -15,13 +14,9 @@ class ProductRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "id"
 
 
-class ProductListAPIView(PageNumberPagination, generics.ListAPIView):
+class ProductListAPIView(generics.ListAPIView):
     queryset = ProductItem.objects.filter()
     serializer_class = ProductSerializer
-    page_size = 10
-
-    def get_paginated_response(self, data):
-        return Response(data)
 
 
 class AvailableProductStockAPIView(APIView):
