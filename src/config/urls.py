@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import include, path, re_path
 from drf_yasg import openapi
 from drf_yasg.generators import OpenAPISchemaGenerator
-from drf_yasg.utils import swagger_auto_schema
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
@@ -41,10 +40,9 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="vitasyushchyk@gmail.com"),
     ),
     public=True,
-    generator_class=BothHttpAndHttpsSchemaGenerator,  # Here
+    generator_class=BothHttpAndHttpsSchemaGenerator,  # API schema that supports both HTTP and HTTPS protocols.
     permission_classes=[permissions.AllowAny],
 )
-
 
 urlpatterns = [
     re_path(
