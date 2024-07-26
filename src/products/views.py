@@ -90,3 +90,28 @@ class ProductSortingView(APIView):
 
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
+    
+
+class ProductFilterView(APIView):
+    def get(self, request):
+        sizes = request.query_params.getlist("sizes")
+        min_price = request.query_params.get("min_price")
+        max_price = request.query_params.get("max_price")
+        colors = request.query_params.getlist("colors")
+        gender = request.query_params.get("gender")
+
+        filters = Q()
+        
+        if gender:
+            filters &= Q(category__gender=gender)
+        if sizes:
+            filters &= Q(size__value__in=sizes)
+        if min_price and max_price:
+            filters &= Q(price__gte=min_price, price__lte=max_price)
+        if colors:
+            filters &= Q(color__title__in=colors)
+
+        products = ProductItem.objects.filter(filters).distinct()
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
