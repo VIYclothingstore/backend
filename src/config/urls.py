@@ -12,11 +12,11 @@ from delivery.serializers import (
 )
 from products.views import (
     AvailableProductStockAPIView,
+    ProductFilterView,
     ProductListAPIView,
     ProductRetrieveAPIView,
     ProductSearchView,
     ProductSortingView,
-    ProductFilterView,
 )
 from users.serializers import LogoutView
 from users.views import (
@@ -83,7 +83,7 @@ urlpatterns = [
     ),
     path("products/search/", ProductSearchView.as_view(), name="product-search"),
     path("products/sort/", ProductSortingView.as_view(), name="product-sorting"),
-    path("products/filter/", ProductFilterView.as_view(), name='filter-products'),
+    path("products/filter/", ProductFilterView.as_view(), name="filter-products"),
     # NOVA POST
     path(
         "nova-post/settlements/<str:settlement_name>/",

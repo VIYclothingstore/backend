@@ -90,7 +90,7 @@ class ProductSortingView(APIView):
 
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data, status=HTTP_200_OK)
-    
+
 
 class ProductFilterView(APIView):
     def get(self, request):
@@ -101,7 +101,7 @@ class ProductFilterView(APIView):
         gender = request.query_params.get("gender")
 
         filters = Q()
-        
+
         if gender:
             filters &= Q(category__gender=gender)
         if sizes:
