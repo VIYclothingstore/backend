@@ -113,5 +113,7 @@ class ProductFilterView(APIView):
 
         products = ProductItem.objects.filter(filters).distinct()
 
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(
+            products, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=HTTP_200_OK)
