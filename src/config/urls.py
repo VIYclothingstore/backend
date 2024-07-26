@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import include, path, re_path
 from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
+from drf_yasg.generators import OpenAPISchemaGenerator
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 
@@ -25,6 +25,14 @@ from users.views import (
     UserRetrieveUpdateDestroyView,
 )
 
+
+class BothHttpAndHttpsSchemaGenerator(OpenAPISchemaGenerator):
+    def get_schema(self, request=None, public=False):
+        schema = super().get_schema(request, public)
+        schema.schemes = ["http", "https"]
+        return schema
+
+
 schema_view = get_schema_view(
     openapi.Info(
         title="Sport Hub | SportHub API",
@@ -32,6 +40,7 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="vitasyushchyk@gmail.com"),
     ),
     public=True,
+    generator_class=BothHttpAndHttpsSchemaGenerator,  # API schema that supports both HTTP and HTTPS protocols.
     permission_classes=[permissions.AllowAny],
 )
 
