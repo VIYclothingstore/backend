@@ -88,7 +88,9 @@ class ProductSortingView(APIView):
             products = list(ProductItem.objects.all())
             random.shuffle(products)
 
-        serializer = ProductSerializer(products, many=True)
+        serializer = ProductSerializer(
+            products, many=True, context={"request": request}
+        )
         return Response(serializer.data, status=HTTP_200_OK)
 
 
