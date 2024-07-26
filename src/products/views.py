@@ -1,3 +1,5 @@
+import random
+
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.response import Response
@@ -65,6 +67,52 @@ class ProductSearchView(APIView):
         products = ProductItem.objects.filter(
             query
         ).distinct()  # Remove duplicate results
+        serializer = ProductSerializer(
+            products, many=True, context={"request": request}
+        )
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+class ProductSortingView(APIView):
+    def get(self, request):
+        sort_by = request.GET.get("sort", "popular")
+
+        if sort_by == "price_asc":
+            products = ProductItem.objects.all().order_by("price")
+        elif sort_by == "price_desc":
+            products = ProductItem.objects.all().order_by("-price")
+        elif sort_by == "popular":
+            products = list(ProductItem.objects.all())
+            random.shuffle(products)
+        else:
+            products = list(ProductItem.objects.all())
+            random.shuffle(products)
+
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data, status=HTTP_200_OK)
+
+
+class ProductFilterView(APIView):
+    def get(self, request):
+        sizes = request.query_params.getlist("sizes")
+        min_price = request.query_params.get("min_price")
+        max_price = request.query_params.get("max_price")
+        colors = request.query_params.getlist("colors")
+        gender = request.query_params.get("gender")
+
+        filters = Q()
+
+        if gender:
+            filters &= Q(category__gender=gender)
+        if sizes:
+            filters &= Q(size__value__in=sizes)
+        if min_price and max_price:
+            filters &= Q(price__gte=min_price, price__lte=max_price)
+        if colors:
+            filters &= Q(color__title__in=colors)
+
+        products = ProductItem.objects.filter(filters).distinct()
+
         serializer = ProductSerializer(
             products, many=True, context={"request": request}
         )
