@@ -3,7 +3,7 @@ import random
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.response import Response
-from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
+from rest_framework.status import HTTP_200_OK
 from rest_framework.views import APIView
 
 from .models import IN_STOCK, ProductItem, WarehouseItem
@@ -59,12 +59,6 @@ class ProductSearchView(generics.ListAPIView):
             query &= Q(size__value=size)
         if color:
             query &= Q(colors__color__title__iexact=color)
-
-        if not (title or category or description or color or size or gender):
-            return Response(
-                {"message": "No search query provided"}, status=HTTP_400_BAD_REQUEST
-            )
-
         products = ProductItem.objects.filter(query).distinct()
         return products
 
