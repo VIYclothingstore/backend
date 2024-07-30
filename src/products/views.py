@@ -2,7 +2,6 @@ import random
 
 from django.db.models import Q
 from rest_framework import generics
-from rest_framework.pagination import LimitOffsetPagination
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_400_BAD_REQUEST
 from rest_framework.views import APIView
@@ -34,17 +33,16 @@ class AvailableProductStockAPIView(APIView):
         return Response({"count": cont})
 
 
-class ProductSearchView(APIView):
-    pagination_class = LimitOffsetPagination
+class ProductSearchView(generics.ListAPIView):
+    serializer_class = ProductSerializer
 
-    def get(self, request):
-
-        gender = request.GET.get("gender")
-        category = request.GET.get("category")
-        title = request.GET.get("title")
-        description = request.GET.get("description")
-        size = request.GET.get("size")
-        color = request.GET.get("color")
+    def get_queryset(self):
+        gender = self.request.GET.get("gender")
+        category = self.request.GET.get("category")
+        title = self.request.GET.get("title")
+        description = self.request.GET.get("description")
+        size = self.request.GET.get("size")
+        color = self.request.GET.get("color")
 
         query = Q()
         if gender:
@@ -67,13 +65,8 @@ class ProductSearchView(APIView):
                 {"message": "No search query provided"}, status=HTTP_400_BAD_REQUEST
             )
 
-        products = ProductItem.objects.filter(
-            query
-        ).distinct()  # Remove duplicate results
-        serializer = ProductSerializer(
-            products, many=True, context={"request": request}
-        )
-        return Response(serializer.data, status=HTTP_200_OK)
+        products = ProductItem.objects.filter(query).distinct()
+        return products
 
 
 class ProductSortingView(APIView):
