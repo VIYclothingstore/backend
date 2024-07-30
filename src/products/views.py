@@ -17,10 +17,17 @@ class ProductRetrieveAPIView(generics.RetrieveAPIView):
     lookup_field = "id"
 
 
-class ProductListAPIView(LimitOffsetPagination, generics.ListAPIView):
+class ProductListAPIView(generics.ListAPIView):
     queryset = ProductItem.objects.filter()
     serializer_class = ProductSerializer
+    pagination_class = LimitOffsetPagination
     default_limit = 8
+
+    def paginate_queryset(self, queryset):
+        self.limit = self.request.query_params.get("limit", self.default_limit)
+        if self.limit is None:
+            return None
+        return super().paginate_queryset(queryset)
 
 
 class AvailableProductStockAPIView(APIView):
