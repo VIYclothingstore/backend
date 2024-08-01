@@ -10,6 +10,7 @@ from delivery.serializers import (
     NovaPostSettlementsView,
     NovaPostWarehousesView,
 )
+from order.views import CreateBasket, RetrieveUpdateDestroyBasketAPIView
 from products.views import (
     AvailableProductStockAPIView,
     ProductFilterView,
@@ -108,5 +109,12 @@ urlpatterns = [
         "nova-post/search_streets/<str:street_name>/<str:ref>/",
         NovaPostAddressesView.as_view(),
         name="nova-search-street",
+    ),
+    path("basket/create/", CreateBasket.as_view(), name="create-basket"),
+    path(
+        "basket/<basket_id>/",
+        RetrieveUpdateDestroyBasketAPIView.as_view(
+            {"post": "create", "patch": "update", "delete": "destroy"}
+        ),
     ),
 ]
