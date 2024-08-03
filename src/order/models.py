@@ -6,13 +6,17 @@ from products.models import Color, ProductItem, ProductSize
 
 
 class Basket(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class BasketItem(models.Model):
-    basket = models.ForeignKey(Basket, on_delete=models.CASCADE)
+    basket = models.ForeignKey(Basket, on_delete=models.CASCADE, related_name="items")
     product = models.ForeignKey(ProductItem, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, on_delete=models.CASCADE)
     size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)

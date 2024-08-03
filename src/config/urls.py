@@ -4,6 +4,7 @@ from drf_yasg import openapi
 from drf_yasg.generators import OpenAPISchemaGenerator
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
+from rest_framework.routers import DefaultRouter
 
 from delivery.serializers import (
     NovaPostAddressesView,
@@ -110,11 +111,13 @@ urlpatterns = [
         NovaPostAddressesView.as_view(),
         name="nova-search-street",
     ),
-    path("basket/create/", CreateBasket.as_view(), name="create-basket"),
-    path(
-        "basket/<basket_id>/",
-        RetrieveUpdateDestroyBasketAPIView.as_view(
-            {"post": "create", "patch": "update", "delete": "destroy"}
-        ),
-    ),
 ]
+
+router = DefaultRouter()
+router.register(
+    r"basket/(?P<basket_id>[\w-]+)/items",
+    RetrieveUpdateDestroyBasketAPIView,
+    basename="basket_item",
+)
+router.register(r"/basket", CreateBasket, basename="basket")
+urlpatterns += router.urls
