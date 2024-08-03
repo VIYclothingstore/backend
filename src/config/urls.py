@@ -115,9 +115,9 @@ urlpatterns = [
 
 router = DefaultRouter()
 router.register(
-    r"basket/(?P<basket_id>[\w-]+)/items",
+    r"baskets/(?P<basket_id>[\w-]+)/items",
     RetrieveUpdateDestroyBasketAPIView,
     basename="basket_item",
 )
-router.register(r"/basket", CreateBasket, basename="basket")
+router.register(r"baskets", CreateBasket, basename="basket")
 urlpatterns += router.urls
