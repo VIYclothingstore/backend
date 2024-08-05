@@ -16,3 +16,4 @@ class BasketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Basket
         fields = "__all__"
+        read_only_fields = ["user"]

@@ -13,6 +13,13 @@ class CreateBasket(mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericVi
     lookup_url_kwarg = "basket_id"
     queryset = Basket.objects.all()
 
+    def perform_create(self, serializer):
+        basket = serializer.save()
+        if self.request.user.is_authenticated:
+            basket.user = self.request.user
+            basket.save()
+        return basket
+
 
 class RetrieveUpdateDestroyBasketAPIView(
     mixins.CreateModelMixin,

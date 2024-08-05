@@ -3,6 +3,7 @@ import uuid
 from django.db import models
 
 from products.models import Color, ProductItem, ProductSize
+from users.models import User
 
 
 class Basket(models.Model):
@@ -11,6 +12,7 @@ class Basket(models.Model):
         default=uuid.uuid4,
         editable=False,
     )
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
