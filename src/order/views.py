@@ -13,12 +13,37 @@ class CreateBasket(mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericVi
     lookup_url_kwarg = "basket_id"
     queryset = Basket.objects.all()
 
-    def perform_create(self, serializer):
-        basket = serializer.save()
-        if self.request.user.is_authenticated:
-            basket.user = self.request.user
-            basket.save()
-        return basket
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        if request.user.is_authenticated:
+            try:
+                user_basket = Basket.objects.get(user=request.user)
+                return Response(
+                    {
+                        "basket_id": user_basket.id,
+                        "user_id": request.user.id,
+                    },
+                    status=HTTP_201_CREATED,
+                )
+            except Basket.DoesNotExist:
+
+                serializer.save(user=request.user)
+                return Response(
+                    {
+                        "basket_id": serializer.instance.id,
+                        "user_id": request.user.id,
+                    },
+                    status=HTTP_201_CREATED,
+                )
+        else:
+            serializer.save()
+        return Response(
+            {
+                "basket_id": serializer.instance.id,
+            },
+            status=HTTP_201_CREATED,
+        )
 
 
 class RetrieveUpdateDestroyBasketAPIView(
