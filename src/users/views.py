@@ -2,7 +2,6 @@ from tokenize import TokenError
 
 from django.core.mail import EmailMultiAlternatives
 from django.dispatch import receiver
-from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from requests import Request
 from rest_framework import exceptions as rf_exceptions
@@ -17,6 +16,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
+from config import settings
 from users.models import User
 from users.permission import IsOwner
 from users.serializers import (
@@ -108,13 +108,12 @@ class UserRetrieveUpdateDestroyView(UpdateAPIView, DestroyAPIView):
 
 
 @receiver(reset_password_token_created)
-def password_reset_token_created(instance, reset_password_token, *args, **kwargs):
+def password_reset_token_created(reset_password_token, *args, **kwargs):
     email_text_message = (
         f"{reset_password_token.user.first_name},\n\n"
         "Запит на скидання пароля для вашого облікового запису.\n"
-        f"Перейдіть за посиланням, щоб скинути пароль:\n\n"
-        # f"{settings.UI}/{settings.UI_URLS['confirm_reset_password']}"
-        f"{instance.request.build_absolute_uri(reverse('password_reset:reset-password-confirm'))}"
+        "Перейдіть за посиланням, щоб скинути пароль:\n\n"
+        f"{settings.UI_URLS['confirm_reset_password']}"
         f"?token={reset_password_token.key}\n\n"
         "Якщо ви не запитували скидання пароля, проігноруйте цей лист.\n\n"
         "Дякуємо,\n"

@@ -191,6 +191,10 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+UI = os.getenv("UI")
+UI_URLS = {
+    "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "change_password")}',
+}
 
 NOVAPOSHTA_API_SETTINGS = {
     "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
