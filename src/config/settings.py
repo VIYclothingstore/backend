@@ -193,7 +193,7 @@ EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 UI = os.getenv("UI")
 UI_URLS = {
-    "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "change_password")}',
+    "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "reset_password")}',
 }
 
 NOVAPOSHTA_API_SETTINGS = {
