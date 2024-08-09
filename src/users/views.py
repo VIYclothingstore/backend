@@ -114,7 +114,7 @@ def password_reset_token_created(reset_password_token, *args, **kwargs):
         "Запит на скидання пароля для вашого облікового запису.\n"
         "Перейдіть за посиланням, щоб скинути пароль:\n\n"
         f"{settings.UI_URLS['confirm_reset_password']}"
-        f"?token={reset_password_token.key}\n\n"
+        f"/{reset_password_token.key}\n\n"
         "Якщо ви не запитували скидання пароля, проігноруйте цей лист.\n\n"
         "Дякуємо,\n"
         "З повагою команда  Online store Sport Hub"
