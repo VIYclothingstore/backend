@@ -56,11 +56,11 @@ class RetrieveUpdateDestroyBasketAPIView(
     queryset = BasketItem.objects.all()
     lookup_url_kwarg = "basket_item_id"
 
-    def _check_warehouse_availability(self, serializer):
-        product_id = serializer.validated_data.get("product")
-        color_id = serializer.validated_data.get("color")
-        size_id = serializer.validated_data.get("size")
-        quantity = serializer.validated_data.get("quantity")
+    def _check_warehouse_availability(self, data):
+        product_id = data.get("product")
+        color_id = data.get("color")
+        size_id = data.get("size")
+        quantity = data.get("quantity")
         available_stock = WarehouseItem.objects.filter(
             product_id=product_id,
             color_id=color_id,
@@ -76,18 +76,41 @@ class RetrieveUpdateDestroyBasketAPIView(
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        warehouse_check_response = self._check_warehouse_availability(serializer)
-        if warehouse_check_response:
-            return warehouse_check_response
-        serializer.save(**kwargs)
-        return Response(serializer.data, status=HTTP_201_CREATED)
+        existing_item = BasketItem.objects.filter(
+            product=serializer.validated_data["product"],
+            color=serializer.validated_data["color"],
+            size=serializer.validated_data["size"],
+            basket=kwargs["basket_id"],
+        ).first()
+        if existing_item:
+            if warehouse_check_response := self._check_warehouse_availability(
+                {
+                    **serializer.validated_data,
+                    "quantity": serializer.validated_data["quantity"]
+                    + existing_item.quantity,
+                }
+            ):
+                return warehouse_check_response
+            existing_item.quantity += serializer.validated_data["quantity"]
+            existing_item.save()
+            serializer = self.get_serializer(existing_item)
+            return Response(serializer.data, status=HTTP_201_CREATED)
+        else:
+            if warehouse_check_response := self._check_warehouse_availability(
+                serializer.validated_data
+            ):
+                return warehouse_check_response
+            serializer.save(**kwargs)
+            return Response(serializer.data, status=HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop("partial", False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        warehouse_check_response = self._check_warehouse_availability(serializer)
+        warehouse_check_response = self._check_warehouse_availability(
+            serializer.validated_data
+        )
         if warehouse_check_response:
             return warehouse_check_response
         serializer.save(**kwargs)
