@@ -1,10 +1,22 @@
 # **SPORT HUB STORE**
 
-### Online store. The project was created by a team of enthusiasts to improve their skills and consolidate knowledge in practice.
+### [SPORT HUB](https://teamchallenge-sport-store-frontend.vercel.app) is an e-commerce platform for hassle-free shopping.
+
+### In this project implemented:
+
+##### - Catalog of goods: structure of presentation, search, sorting, filters of goods.
+
+#### - Shopping cart and placing an order: adding goods to the basket, and placing a purchase.
+
+#### - User profile: possibility of registration, authorization, and management of personal data.
+
+#### - Admin panel: interface for managing the store, adding products, categories, users, etc.
+
+#### - Integration with API NOVA POST: automatic branch search.
 
 ![Logo](docs/logo.png)
 
-## Tools:
+## Stack:
 
 [![My Skills](https://skillicons.dev/icons?i=python,docker,postgres,django,gcp&theme=dark&perline=10)](https://skillicons.dev)
 
@@ -94,10 +106,9 @@ In this project used [Poetry](https://python-poetry.org/) environment
 
 ## Deployment:
 
-We chose [Google Cloud Platform](https://cloud.google.com) to deploy our project 
-
+We chose [Google Cloud Platform](https://cloud.google.com) to deploy our project
 
 ## Contributors:
 
-   - [Vita Yushchyk](https://github.com/KolyaChaun) 
-   - [Mykola Chaiun](https://github.com/vitayushchyk)
+- [Vita Yushchyk](https://github.com/KolyaChaun)
+- [Mykola Chaiun](https://github.com/vitayushchyk)
