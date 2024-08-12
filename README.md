@@ -110,5 +110,5 @@ We chose [Google Cloud Platform](https://cloud.google.com) to deploy our project
 
 ## Contributors:
 
-- [Vita Yushchyk](https://github.com/KolyaChaun)
-- [Mykola Chaiun](https://github.com/vitayushchyk)
+- [Vita Yushchyk](https://github.com/vitayushchyk)
+- [Mykola Chaiun](https://github.com/KolyaChaun)
