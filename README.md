@@ -100,7 +100,7 @@ In this project used [Poetry](https://python-poetry.org/) environment
 
 ## Swagger:
 
-- Show OpenApi docs
+- Show OpenApi schema
 
       http://host:port/swagger/
 
