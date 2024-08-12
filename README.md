@@ -97,6 +97,7 @@ In this project used [Poetry](https://python-poetry.org/) environment
 We chose [Google Cloud Platform](https://cloud.google.com) to deploy our project 
 
 
+## Contributors:
 
-   
-
+   - [Vita Yushchyk](https://github.com/KolyaChaun) 
+   - [Mykola Chaiun](https://github.com/vitayushchyk)
