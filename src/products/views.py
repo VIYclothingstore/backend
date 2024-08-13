@@ -66,19 +66,20 @@ class ProductSortingView(generics.ListAPIView):
 
     def get_queryset(self):
         sort_by = self.request.GET.get("sort")
+        queryset = ProductItem.objects.all()
 
         if sort_by == "price_asc":
-            queryset = ProductItem.objects.all().order_by("price")
+            queryset = queryset.order_by("price")
         elif sort_by == "price_desc":
-            queryset = ProductItem.objects.all().order_by("-price")
+            queryset = queryset.order_by("-price")
         elif sort_by == "popular":
-            queryset = ProductItem.objects.all().order_by("?")
+            queryset = queryset.order_by("?")
         elif sort_by == "created_at":
-            queryset = ProductItem.objects.all().order_by("-created_at")
+            queryset = queryset.order_by("-created_at")
         elif sort_by == "updated_at":
-            queryset = ProductItem.objects.all().order_by("-updated_at")
-        else:
-            queryset = ProductItem.objects.all()
+            queryset = queryset.order_by("-updated_at")
+        elif sort_by == "is_latest":
+            queryset = queryset.order_by("category", "-created_at").distinct("category")
 
         return queryset
 
