@@ -75,6 +75,8 @@ class ProductSortingView(generics.ListAPIView):
             queryset = ProductItem.objects.all().order_by("?")
         elif sort_by == "created_at":
             queryset = ProductItem.objects.all().order_by("-created_at")
+        elif sort_by == "updated_at":
+            queryset = ProductItem.objects.all().order_by("-updated_at")
         else:
             queryset = ProductItem.objects.all()
 
