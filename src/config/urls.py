@@ -6,10 +6,11 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 
-from delivery.serializers import (
-    NovaPostAddressesView,
-    NovaPostSettlementsView,
-    NovaPostWarehousesView,
+from delivery.views import (
+    AddressesView,
+    SettlementsView,
+    WarehousesView,
+    WarehouseTypeView,
 )
 from order.views import CreateBasket, RetrieveUpdateDestroyBasketAPIView
 from products.views import (
@@ -98,17 +99,22 @@ urlpatterns = [
     # NOVA POST
     path(
         "nova-post/settlements/<str:settlement_name>/",
-        NovaPostSettlementsView.as_view(),
+        SettlementsView.as_view(),
         name="nova-post-settlements",
     ),
     path(
-        "nova-post/warehouses/<str:settlement_name>/<str:warehouse_id>/",
-        NovaPostWarehousesView.as_view(),
+        "nova-post/warehouses/<str:settlement_name>/<str:warehouse_ref>/",
+        WarehousesView.as_view(),
         name="nova-get-warehouses",
     ),
     path(
+        "nova-post/warehous/type/",
+        WarehouseTypeView.as_view(),
+        name="nova-get-warehouses-type",
+    ),
+    path(
         "nova-post/search_streets/<str:street_name>/<str:ref>/",
-        NovaPostAddressesView.as_view(),
+        AddressesView.as_view(),
         name="nova-search-street",
     ),
 ]
