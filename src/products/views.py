@@ -1,5 +1,3 @@
-import random
-
 from django.db.models import Q
 from rest_framework import generics
 from rest_framework.response import Response
@@ -63,25 +61,27 @@ class ProductSearchView(generics.ListAPIView):
         return products
 
 
-class ProductSortingView(APIView):
-    def get(self, request):
-        sort_by = request.GET.get("sort", "popular")
+class ProductSortingView(generics.ListAPIView):
+    serializer_class = ProductSerializer
+
+    def get_queryset(self):
+        sort_by = self.request.GET.get("sort")
+        queryset = ProductItem.objects.all()
 
         if sort_by == "price_asc":
-            products = ProductItem.objects.all().order_by("price")
+            queryset = queryset.order_by("price")
         elif sort_by == "price_desc":
-            products = ProductItem.objects.all().order_by("-price")
+            queryset = queryset.order_by("-price")
         elif sort_by == "popular":
-            products = list(ProductItem.objects.all())
-            random.shuffle(products)
-        else:
-            products = list(ProductItem.objects.all())
-            random.shuffle(products)
+            queryset = queryset.order_by("?")
+        elif sort_by == "created_at":
+            queryset = queryset.order_by("-created_at")
+        elif sort_by == "updated_at":
+            queryset = queryset.order_by("-updated_at")
+        elif sort_by == "is_latest":
+            queryset = queryset.order_by("category", "-created_at").distinct("category")
 
-        serializer = ProductSerializer(
-            products, many=True, context={"request": request}
-        )
-        return Response(serializer.data, status=HTTP_200_OK)
+        return queryset
 
 
 class ProductFilterView(APIView):

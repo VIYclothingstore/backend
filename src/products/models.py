@@ -2,6 +2,8 @@ from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models import ManyToManyField
 
+from delivery.models import Order
+
 MEN = "Men"
 WOMEN = "Women"
 
@@ -75,6 +77,9 @@ class WarehouseItem(models.Model):
     size = models.ForeignKey(ProductSize, on_delete=models.CASCADE)
     status = models.CharField(
         max_length=10, choices=[(IN_STOCK, IN_STOCK), (SOLD, SOLD)]
+    )
+    order = models.ForeignKey(
+        Order, on_delete=models.CASCADE, related_name="wh_items", null=True, blank=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
