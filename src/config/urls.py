@@ -103,7 +103,7 @@ urlpatterns = [
         name="nova-post-settlements",
     ),
     path(
-        "nova-post/warehouses/<str:settlement_name>/<str:warehouse_ref>/",
+        "nova-post/warehouses/<str:settlement_name>/",
         WarehousesView.as_view(),
         name="nova-get-warehouses",
     ),
