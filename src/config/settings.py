@@ -194,9 +194,11 @@ EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 UI = os.getenv("UI")
 UI_URLS = {
     "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "reset_password")}',
+    "confirm_email": f'{UI}/{os.getenv("UI_URLS_CONFIRM_EMAIL", "confirm_email")}',
 }
 
 NOVAPOSHTA_API_SETTINGS = {
     "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
     "API_POINT": "https://api.novaposhta.ua/v2.0/json/",
 }
+TOKEN_FOR_EMAIL_LIFETIME = 30 * 60
