@@ -105,7 +105,7 @@ class UserCreateAPIView(CreateAPIView):
 
 
 class UserActivationView(APIView):
-    def post(self, request, activation_key):
+    def post(self, _: Request, activation_key):
         try:
             user = User.objects.get(confirmationuseremail__token=activation_key)
             confirmation_email = user.confirmationuseremail_set.get(
