@@ -8,6 +8,7 @@ from rest_framework_simplejwt.serializers import (
 )
 
 from users.models import User
+from users.validators import CustomFullNameValidator, CustomPasswordValidator
 
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -71,36 +72,14 @@ class UserCreateSerializer(serializers.ModelSerializer):
         repeat_password = attrs.pop("repeat_password", None)
         if password != repeat_password:
             raise serializers.ValidationError("Passwords do not match.")
-        self._validate_password(password)
-        self._validate_full_name(
+        password_validator = CustomPasswordValidator()
+        password_validator.validate(password)
+        full_name_validator = CustomFullNameValidator()
+        full_name_validator.validate(
             attrs.get("first_name"), attrs.get("last_name"), attrs.get("surname")
         )
 
         return attrs
-
-    @staticmethod
-    def _validate_password(password):
-        pattern = r"^(\S){6,}$"
-        if not bool(re.match(pattern, password)):
-            raise serializers.ValidationError(
-                "The password must consist of any characters and have a length of at least 6"
-            )
-
-    @staticmethod
-    def _validate_full_name(first_name, last_name, surname):
-        pattern = r"^[^\d^Ы^ы^Ё^ё^Э^э\W]+$"
-        if not bool(re.match(pattern, first_name)):
-            raise serializers.ValidationError(
-                "The first name can only contain letters and must be at least 1 character long"
-            )
-        if not bool(re.match(pattern, last_name)):
-            raise serializers.ValidationError(
-                "The last name can only contain letters and must be at least 1 character long"
-            )
-        if not bool(re.match(pattern, surname)):
-            raise serializers.ValidationError(
-                "The surname can only contain letters and must be at least 1 character long"
-            )
 
     def create(self, validated_data):
         user = User.objects.create_user(
