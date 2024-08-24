@@ -1,11 +1,7 @@
 import re
 from tokenize import TokenError
 
-from django.contrib.auth import logout
-from rest_framework import serializers, status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from rest_framework import serializers
 from rest_framework_simplejwt.serializers import (
     TokenObtainPairSerializer,
     TokenRefreshSerializer,
@@ -118,17 +114,6 @@ class UserCreateSerializer(serializers.ModelSerializer):
         )
         user.save()
         return user
-
-
-class LogoutView(APIView):
-    permission_classes = [IsAuthenticated]
-
-    def post(self, request):
-        logout(request)
-
-        return Response(
-            {"message": "Successfully logged out!"}, status=status.HTTP_200_OK
-        )
 
 
 class UserRetrieveUpdateDestroySerializer(serializers.ModelSerializer):

@@ -21,10 +21,12 @@ from products.views import (
     ProductSearchView,
     ProductSortingView,
 )
-from users.serializers import LogoutView
 from users.views import (
     CustomTokenObtainPairView,
     CustomTokenRefreshView,
+    LogoutView,
+    ResendActivationEmailView,
+    UserActivationView,
     UserCreateAPIView,
     UserInfoView,
     UserRetrieveUpdateDestroyView,
@@ -71,11 +73,21 @@ urlpatterns = [
     ),
     # USER
     path("user/registration/", UserCreateAPIView.as_view(), name="user-registration"),
-    path("user/login/", CustomTokenObtainPairView.as_view(), name="user-login"),
-    path("user/logout/", LogoutView.as_view(), name="logout"),
-    path("user/me/", UserInfoView.as_view(), name="user-me"),
     path(
-        "user/profile/",
+        "user/confirm_email/<str:activation_key>/",
+        UserActivationView.as_view(),
+        name="confirm-email",
+    ),
+    path(
+        "user/resend/activation/",
+        ResendActivationEmailView.as_view(),
+        name="resend-activation",
+    ),
+    path("user/login/", CustomTokenObtainPairView.as_view(), name="user-login"),
+    path("user/logout/", LogoutView.as_view(), name="user-logout"),
+    path("user/view/", UserInfoView.as_view(), name="user-view"),
+    path(
+        "user/profile/<int:pk>/",
         UserRetrieveUpdateDestroyView.as_view(),
         name="user-retrieve-update-destroy",
     ),
