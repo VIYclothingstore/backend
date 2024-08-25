@@ -1,4 +1,3 @@
-import re
 from tokenize import TokenError
 
 from rest_framework import serializers

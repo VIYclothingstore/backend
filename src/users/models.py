@@ -22,7 +22,7 @@ class CustomUserManager(BaseUserManager):
             "Ми раді вітати тебе в спільноті Online store Sport Hub!\n"
             "Щоб завершити реєстрацію та отримати доступ до всіх можливостей нашого магазину, будь ласка, "
             "підтвердь свою електронну адресу, перейшовши за посиланням:\n\n"
-            f"{settings.UI_URLS['confirm_email']}"
+            f"{settings.UI_URLS['confirmed_email']}"
             f"/{email_confirmation.token}\n\n"
             "Якщо у тебе виникнуть будь-які питання, звертайся до нас за адресою sporthub.store.ua@gmail.com\n\n"
             "З найкращими побажаннями,\n"
