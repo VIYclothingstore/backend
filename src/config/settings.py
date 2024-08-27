@@ -197,7 +197,7 @@ UI_URLS = {
     "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "auth/reset_password")}',
     "confirmed_email": f'{UI}/{os.getenv("UI_URLS_CONFIRM_EMAIL", "auth/confirmed_email")}',
 }
-TOKEN_FOR_EMAIL_LIFETIME = 30 * 60
+TOKEN_FOR_EMAIL_LIFETIME = 60
 
 # Nova Poshta
 NOVAPOSHTA_API_SETTINGS = {
