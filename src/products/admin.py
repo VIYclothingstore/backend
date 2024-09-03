@@ -46,6 +46,6 @@ class SizeAdmin(admin.ModelAdmin):
 
 @admin.register(WarehouseItem)
 class WarehouseAdmin(admin.ModelAdmin):
-    fields = ["product", "color", "size", "status"]
-    list_display = ["product", "color", "size", "status"]
-    search_fields = ["product", "color", "size", "status"]
+    fields = ["product", "color", "size", "status", "order"]
+    list_display = ["product", "color", "size", "status", "order"]
+    search_fields = ["product", "color", "size", "status", "order"]
