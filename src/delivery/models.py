@@ -44,7 +44,6 @@ class Order(models.Model):
     branch = models.CharField(max_length=100, null=True, blank=True)
     street = models.CharField(max_length=20, null=True, blank=True)
     apartment = models.CharField(max_length=20, null=True, blank=True)
-
     status = models.CharField(
         max_length=20,
         choices=[
