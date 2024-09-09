@@ -8,6 +8,7 @@ from rest_framework.routers import DefaultRouter
 
 from delivery.views import (
     AddressesView,
+    CreateOrderView,
     SettlementsView,
     WarehousesView,
     WarehouseTypeView,
@@ -129,6 +130,8 @@ urlpatterns = [
         AddressesView.as_view(),
         name="nova-search-street",
     ),
+    # DELIVERY
+    path("delivery/orders/create/", CreateOrderView.as_view(), name="delivery-create"),
 ]
 
 router = DefaultRouter()
