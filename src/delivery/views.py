@@ -109,4 +109,3 @@ class CreateOrderView(CreateAPIView):
                 warehouse_item.save()
         basket = Basket.objects.get(id=basket_id)
         basket.delete()
-
