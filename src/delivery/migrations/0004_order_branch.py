@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("delivery", "0003_alter_order_city_alter_order_delivery_method_and_more"),
     ]

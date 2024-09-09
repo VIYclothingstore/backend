@@ -2,7 +2,11 @@ from abc import ABC, abstractmethod
 
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.status import HTTP_201_CREATED, HTTP_404_NOT_FOUND
+from rest_framework.status import (
+    HTTP_201_CREATED,
+    HTTP_403_FORBIDDEN,
+    HTTP_404_NOT_FOUND,
+)
 from rest_framework.views import APIView
 
 from delivery.nova_post_api_client import NovaPostApiClient
@@ -54,10 +58,18 @@ class CreateOrderView(CreateAPIView):
     serializer_class = OrderSerializer
 
     def post(self, request, *args, **kwargs):
+
         try:
             basket_id = request.data.get("basket_id")
             basket = Basket.objects.get(pk=basket_id)
             basket_items = BasketItem.objects.filter(basket=basket)
+            if request.user.id != basket.user_id:
+                return Response(
+                    data=dict(
+                        msg="You cannot place an order from someone else's basket"
+                    ),
+                    status=HTTP_403_FORBIDDEN,
+                )
             if not basket_items:
                 return Response(
                     data=dict(
@@ -97,3 +109,4 @@ class CreateOrderView(CreateAPIView):
                 warehouse_item.save()
         basket = Basket.objects.get(id=basket_id)
         basket.delete()
+

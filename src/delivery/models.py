@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from phonenumber_field.modelfields import PhoneNumberField
 
 from users.models import User
 
@@ -29,6 +30,7 @@ class Order(models.Model):
     first_name = models.CharField(max_length=100, null=False, blank=False)
     last_name = models.CharField(max_length=100, null=False, blank=False)
     surname = models.CharField(max_length=100, null=False, blank=False)
+    phone_number = PhoneNumberField(blank=False, null=False)
     email = models.EmailField(max_length=100, null=False, blank=False)
     city = models.CharField(max_length=20, null=False, blank=False)
     delivery_method = models.CharField(
