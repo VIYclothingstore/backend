@@ -180,6 +180,7 @@ else:
 APPEND_SLASH = False
 PHONENUMBER_DEFAULT_REGION = "UA"
 
+# password reset, email confirmation
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -187,12 +188,13 @@ EMAIL_HOST_USER = "apikey"
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
 UI = os.getenv("UI")
 UI_URLS = {
-    "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "reset_password")}',
-    "confirm_email": f'{UI}/{os.getenv("UI_URLS_CONFIRM_EMAIL", "confirm_email")}',
+    "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "auth/reset_password")}',
+    "confirmed_email": f'{UI}/{os.getenv("UI_URLS_CONFIRM_EMAIL", "auth/confirmed_email")}',
 }
+TOKEN_FOR_EMAIL_LIFETIME = 60
 
+# Nova Poshta
 NOVAPOSHTA_API_SETTINGS = {
     "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
     "API_POINT": "https://api.novaposhta.ua/v2.0/json/",
 }
-TOKEN_FOR_EMAIL_LIFETIME = 30 * 60
