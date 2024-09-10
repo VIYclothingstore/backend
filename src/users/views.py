@@ -19,6 +19,7 @@ from rest_framework.response import Response
 from rest_framework.status import (
     HTTP_200_OK,
     HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
     HTTP_406_NOT_ACCEPTABLE,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
@@ -46,7 +47,7 @@ class CustomTokenObtainPairView(TokenObtainPairView):
         ) and not user.is_active:
             return Response(
                 data=dict(
-                    mag="User not activated, please activate your account by email"
+                    msg="User not activated, please activate your account by email"
                 ),
                 status=HTTP_406_NOT_ACCEPTABLE,
             )
@@ -56,11 +57,11 @@ class CustomTokenObtainPairView(TokenObtainPairView):
             msg = "\n".join(
                 [f"Field '{key}' may not be blank." for key in e.detail.keys()]
             )
-            return Response(data=dict(mg=msg), status=HTTP_400_BAD_REQUEST)
+            return Response(data=dict(msg=msg), status=HTTP_400_BAD_REQUEST)
         except TokenError as e:
             return Response(
                 data=dict(
-                    mg=", ".join(e.args),
+                    msg=", ".join(e.args),
                     status=HTTP_500_INTERNAL_SERVER_ERROR,
                 )
             )
@@ -80,7 +81,7 @@ class CustomTokenRefreshView(TokenRefreshView):
         serializer.is_valid(raise_exception=True)
         try:
             if serializer.validated_data["access"]:
-                return Response(serializer.validated_data, status=status.HTTP_200_OK)
+                return Response(serializer.validated_data, status=HTTP_200_OK)
         except KeyError:
             if serializer.validated_data["code"] == status.HTTP_400_BAD_REQUEST:
                 status_code = status.HTTP_400_BAD_REQUEST
@@ -138,8 +139,8 @@ class ResendActivationEmailView(APIView):
 
         if not email:
             return Response(
-                data=dict(mg="Email is required"),
-                status=status.HTTP_400_BAD_REQUEST,
+                data=dict(msg="Email is required"),
+                status=HTTP_400_BAD_REQUEST,
             )
         try:
             inactive_user = User.objects.get(email=email)
@@ -149,19 +150,19 @@ class ResendActivationEmailView(APIView):
             if existing_token and existing_token.is_token_valid():
                 return Response(
                     data=dict(
-                        mg="Activation email already sent. Please check your inbox."
+                        msg="Activation email already sent. Please check your inbox."
                     ),
-                    status=status.HTTP_200_OK,
+                    status=HTTP_200_OK,
                 )
             CustomUserManager.send_confirmation_email(inactive_user)
             return Response(
-                data=dict(mg="Activation email sent"),
-                status=status.HTTP_200_OK,
+                data=dict(msg="Activation email sent"),
+                status=HTTP_200_OK,
             )
         except ConfirmationUserEmail.DoesNotExist:
             return Response(
-                data=dict(mg="User nor found"),
-                status=status.HTTP_404_NOT_FOUND,
+                data=dict(msg="User nor found"),
+                status=HTTP_404_NOT_FOUND,
             )
 
 
@@ -190,9 +191,9 @@ class LogoutView(APIView):
 
     def post(self, request):
         logout(request)
-
         return Response(
-            data=dict(mg="Successfully logged out!"), status=status.HTTP_200_OK
+            data=dict(msg="Successfully logged out!"),
+            status=HTTP_200_OK,
         )
 
 
