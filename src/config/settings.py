@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     "products",
     "novaposhta",
     "delivery",
+    "payment",
     "order",
     "corsheaders",
     "phonenumber_field",
@@ -163,7 +164,7 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 }
 
-# STORAGE
+# Storage
 DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME")
 
@@ -180,7 +181,7 @@ else:
 APPEND_SLASH = False
 PHONENUMBER_DEFAULT_REGION = "UA"
 
-# password reset, email confirmation
+# Password reset, email confirmation
 EMAIL_HOST = "smtp.sendgrid.net"
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
@@ -193,8 +194,14 @@ UI_URLS = {
 }
 TOKEN_FOR_EMAIL_LIFETIME = 60
 
-# Nova Poshta
+# Nova Noshta
 NOVAPOSHTA_API_SETTINGS = {
     "NOVAPOSHTA_API_KEY": os.getenv("NOVA_POST_API_KEY"),
     "API_POINT": "https://api.novaposhta.ua/v2.0/json/",
 }
+
+# LiqPay
+LIQPAY_PUBLIC_KEY = os.getenv("LIQPAY_PUBLIC_KEY")
+LIQPAY_PRIVATE_KEY = os.getenv("LIQPAY_PRIVATE_KEY")
+LIQPAY_HOST = "https://www.liqpay.ua/api/"
+SERVER_URL = os.getenv("SERVER_URL")

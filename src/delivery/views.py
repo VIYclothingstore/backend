@@ -2,16 +2,14 @@ from abc import ABC, abstractmethod
 
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
-from rest_framework.status import (
-    HTTP_201_CREATED,
-    HTTP_403_FORBIDDEN,
-    HTTP_404_NOT_FOUND,
-)
+from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
+from config.settings import LIQPAY_PRIVATE_KEY, LIQPAY_PUBLIC_KEY, SERVER_URL
 from delivery.nova_post_api_client import NovaPostApiClient
 from delivery.serializers import OrderSerializer
 from order.models import Basket, BasketItem
+from payment.liqpay_client import LiqPay
 from products.models import IN_STOCK, SOLD, WarehouseItem
 
 
@@ -54,6 +52,30 @@ class AddressesView(NovaPostView):
         )
 
 
+def total_sum_basket_items(basket_items):
+    total_sum = 0
+    for basket_item in basket_items:
+        product = basket_item.product
+        total_sum += product.price * basket_item.quantity
+
+    return str(total_sum)
+
+
+def update_status_warehouse_items(basket_id, order):
+    basket_items = BasketItem.objects.filter(basket_id=basket_id)
+    for item in basket_items:
+        warehouse_item = WarehouseItem.objects.filter(
+            product=item.product, color=item.color, size=item.size, status=IN_STOCK
+        ).first()
+
+        if warehouse_item:
+            warehouse_item.status = SOLD
+            warehouse_item.order = order
+            warehouse_item.save()
+    basket = Basket.objects.get(id=basket_id)
+    basket.delete()
+
+
 class CreateOrderView(CreateAPIView):
     serializer_class = OrderSerializer
 
@@ -87,25 +109,30 @@ class CreateOrderView(CreateAPIView):
         serializer.is_valid(raise_exception=True)
         order = serializer.save()
 
-        self.update_status_warehouse_items(
+        update_status_warehouse_items(
             basket_id=serializer.initial_data.get("basket_id"), order=order
         )
 
+        liqpay = LiqPay(LIQPAY_PUBLIC_KEY, LIQPAY_PRIVATE_KEY)
+        params = {
+            "version": "3",
+            "action": "pay",
+            "amount": "1",
+            "currency": "UAH",
+            "description": "TEST",
+            "sandbox": 1,
+            "order_id": str(order.id),
+            "public_key": LIQPAY_PUBLIC_KEY,
+            "server_url": SERVER_URL,
+        }
+
+        payment_form = liqpay.cnb_form(params)
+
         return Response(
-            data=dict(msg="Congratulations, your order has been successfully created!"),
-            status=HTTP_201_CREATED,
+            data=dict(
+                msg="Your order has been created successfully! Go to checkout!",
+                payment_form=payment_form,
+                order=order.id,
+            ),
+            status=HTTP_200_OK,
         )
-
-    def update_status_warehouse_items(self, basket_id, order):
-        basket_items = BasketItem.objects.filter(basket_id=basket_id)
-        for item in basket_items:
-            warehouse_item = WarehouseItem.objects.filter(
-                product=item.product, color=item.color, size=item.size, status=IN_STOCK
-            ).first()
-
-            if warehouse_item:
-                warehouse_item.status = SOLD
-                warehouse_item.order = order
-                warehouse_item.save()
-        basket = Basket.objects.get(id=basket_id)
-        basket.delete()
