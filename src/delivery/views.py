@@ -36,8 +36,8 @@ class SettlementsView(NovaPostView):
 
 
 class WarehousesView(NovaPostView):
-    def _get_data(self, settlement_name, **kwargs):
-        return self.client.get_warehouses(settlement_name, self.limit, self.page)
+    def _get_data(self, ref_settlement, **kwargs):
+        return self.client.get_warehouses(ref_settlement, self.limit, self.page)
 
 
 class WarehouseTypeView(NovaPostView):

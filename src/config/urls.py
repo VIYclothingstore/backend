@@ -156,7 +156,7 @@ urlpatterns = [
         name="nova-post-settlements",
     ),
     path(
-        "nova-post/warehouses/<str:settlement_name>/",
+        "nova-post/warehouses/<str:ref_settlement>/",
         WarehousesView.as_view(),
         name="nova-get-warehouses",
     ),
@@ -175,17 +175,6 @@ urlpatterns = [
         "delivery/orders/create/",
         CreateOrderView.as_view(),
         name="delivery-create",
-    ),
-    # PAYMENT
-    path(
-        "payment/callback/",
-        PayCallbackView.as_view(),
-        name="pay_callback",
-    ),
-    path(
-        "payment/status/",
-        CheckPaymentStatusView.as_view(),
-        name="check-payment-status",
     ),
 ]
 
