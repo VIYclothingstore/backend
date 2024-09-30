@@ -12,9 +12,9 @@ class NovaPostApiClient:
         data = {
             "apiKey": self.api_key,
             "modelName": "AddressGeneral",
-            "calledMethod": "searchSettlements",
+            "calledMethod": "getSettlements",
             "methodProperties": {
-                "CityName": settlement_name,
+                "FindByString": settlement_name,
                 "Limit": str(limit),
                 "Page": str(page),
             },
@@ -23,14 +23,13 @@ class NovaPostApiClient:
         response.raise_for_status()
         return response.json()
 
-    def get_warehouses(self, settlement_name, limit=25, page=1):
+    def get_warehouses(self, ref_settlement, limit=25, page=1):
         data = {
             "apiKey": self.api_key,
             "modelName": "AddressGeneral",
             "calledMethod": "getWarehouses",
             "methodProperties": {
-                "FindByString": "",
-                "CityName": settlement_name,
+                "SettlementRef": ref_settlement,
                 "Limit": str(limit),
                 "Page": str(page),
             },

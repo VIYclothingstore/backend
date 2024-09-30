@@ -116,7 +116,7 @@ urlpatterns = [
         name="nova-post-settlements",
     ),
     path(
-        "nova-post/warehouses/<str:settlement_name>/",
+        "nova-post/warehouses/<str:ref_settlement>/",
         WarehousesView.as_view(),
         name="nova-get-warehouses",
     ),
@@ -131,7 +131,11 @@ urlpatterns = [
         name="nova-search-street",
     ),
     # DELIVERY
-    path("delivery/orders/create/", CreateOrderView.as_view(), name="delivery-create"),
+    path(
+        "delivery/orders/create/",
+        CreateOrderView.as_view(),
+        name="delivery-create",
+    ),
 ]
 
 router = DefaultRouter()
