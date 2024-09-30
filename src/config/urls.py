@@ -15,8 +15,6 @@ from delivery.views import (
 )
 from order.views import CreateBasket, RetrieveUpdateDestroyBasketAPIView
 from payment.views import CheckPaymentStatusView, PayCallbackView
-
-# from payment.views import PayCallbackView
 from products.views import (
     AvailableProductStockAPIView,
     ProductFilterView,
@@ -175,6 +173,17 @@ urlpatterns = [
         "delivery/orders/create/",
         CreateOrderView.as_view(),
         name="delivery-create",
+    ),
+    # PAYMENT
+    path(
+        "payment/status/",
+        CheckPaymentStatusView.as_view(),
+        name="check-payment-status",
+    ),
+    path(
+        "payment/callback/",
+        PayCallbackView.as_view(),
+        name="pay_callback",
     ),
 ]
 

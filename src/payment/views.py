@@ -16,10 +16,9 @@ from delivery.models import PAYMENT_OK, Order
 from payment.liqpay_client import LiqPay
 
 
-@method_decorator(csrf_exempt, name="dispatch")
 class PayCallbackView(View):
+    @method_decorator(csrf_exempt, name="dispatch")
     def post(self, request, *args, **kwargs):
-
         liqpay = LiqPay(LIQPAY_PUBLIC_KEY, LIQPAY_PRIVATE_KEY)
         data = request.POST.get("data")
         signature = request.POST.get("signature")
