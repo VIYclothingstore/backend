@@ -14,6 +14,9 @@ from delivery.views import (
     WarehouseTypeView,
 )
 from order.views import CreateBasket, RetrieveUpdateDestroyBasketAPIView
+from payment.views import CheckPaymentStatusView, PayCallbackView
+
+# from payment.views import PayCallbackView
 from products.views import (
     AvailableProductStockAPIView,
     ProductFilterView,
@@ -73,7 +76,11 @@ urlpatterns = [
         name="token-refresh",
     ),
     # USER
-    path("user/registration/", UserCreateAPIView.as_view(), name="user-registration"),
+    path(
+        "user/registration/",
+        UserCreateAPIView.as_view(),
+        name="user-registration",
+    ),
     path(
         "user/confirm_email/<str:activation_key>/",
         UserActivationView.as_view(),
@@ -84,9 +91,21 @@ urlpatterns = [
         ResendActivationEmailView.as_view(),
         name="resend-activation",
     ),
-    path("user/login/", CustomTokenObtainPairView.as_view(), name="user-login"),
-    path("user/logout/", LogoutView.as_view(), name="user-logout"),
-    path("user/view/", UserInfoView.as_view(), name="user-view"),
+    path(
+        "user/login/",
+        CustomTokenObtainPairView.as_view(),
+        name="user-login",
+    ),
+    path(
+        "user/logout/",
+        LogoutView.as_view(),
+        name="user-logout",
+    ),
+    path(
+        "user/view/",
+        UserInfoView.as_view(),
+        name="user-view",
+    ),
     path(
         "user/profile/<int:pk>/",
         UserRetrieveUpdateDestroyView.as_view(),
@@ -94,21 +113,42 @@ urlpatterns = [
     ),
     path(
         "user/password_reset/",
-        include("django_rest_passwordreset.urls", namespace="password-reset"),
+        include(
+            "django_rest_passwordreset.urls",
+            namespace="password-reset",
+        ),
     ),
     # PRODUCTS
-    path("products/", ProductListAPIView.as_view(), name="product-list"),
     path(
-        "products/<int:id>/", ProductRetrieveAPIView.as_view(), name="product-retrieve"
+        "products/",
+        ProductListAPIView.as_view(),
+        name="product-list",
+    ),
+    path(
+        "products/<int:id>/",
+        ProductRetrieveAPIView.as_view(),
+        name="product-retrieve",
     ),
     path(
         "products/<int:product_id>/<int:color_id>/<int:size_id>/available/",
         AvailableProductStockAPIView.as_view(),
         name="product-available-stock",
     ),
-    path("products/search/", ProductSearchView.as_view(), name="product-search"),
-    path("products/sort/", ProductSortingView.as_view(), name="product-sorting"),
-    path("products/filter/", ProductFilterView.as_view(), name="filter-products"),
+    path(
+        "products/search/",
+        ProductSearchView.as_view(),
+        name="product-search",
+    ),
+    path(
+        "products/sort/",
+        ProductSortingView.as_view(),
+        name="product-sorting",
+    ),
+    path(
+        "products/filter/",
+        ProductFilterView.as_view(),
+        name="filter-products",
+    ),
     # NOVA POST
     path(
         "nova-post/settlements/<str:settlement_name>/",

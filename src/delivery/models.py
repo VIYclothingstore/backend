@@ -11,6 +11,7 @@ WAITING_FOR_PAYMENT = "Waiting_for_payment"
 SHIPPED = "Shipped"
 COMPLETED = "Completed"
 CANCELED = "Canceled"
+PAYMENT_OK = "Payment_Ok"
 
 BRANCH = "Branch"
 COURIER = "Courier"
@@ -53,6 +54,7 @@ class Order(models.Model):
             (PROCESSING, PROCESSING),
             (SHIPPED, SHIPPED),
             (WAITING_FOR_PAYMENT, WAITING_FOR_PAYMENT),
+            (PAYMENT_OK, PAYMENT_OK),
             (COMPLETED, COMPLETED),
             (CANCELED, CANCELED),
         ],
