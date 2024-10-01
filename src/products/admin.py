@@ -49,3 +49,4 @@ class WarehouseAdmin(admin.ModelAdmin):
     fields = ["product", "color", "size", "status", "order"]
     list_display = ["product", "color", "size", "status", "order"]
     search_fields = ["product", "color", "size", "status", "order"]
+    list_filter = ["product", "color", "size", "status", "order"]
