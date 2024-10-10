@@ -33,7 +33,7 @@ class Order(models.Model):
     surname = models.CharField(max_length=100, null=False, blank=False)
     phone_number = PhoneNumberField(blank=False, null=False)
     email = models.EmailField(max_length=100, null=False, blank=False)
-    city = models.CharField(max_length=20, null=False, blank=False)
+    city = models.CharField(max_length=100, null=False, blank=False)
     delivery_method = models.CharField(
         max_length=48,
         choices=[
@@ -45,7 +45,7 @@ class Order(models.Model):
         blank=False,
     )
     branch = models.CharField(max_length=100, null=True, blank=True)
-    street = models.CharField(max_length=20, null=True, blank=True)
+    street = models.CharField(max_length=100, null=True, blank=True)
     apartment = models.CharField(max_length=20, null=True, blank=True)
     status = models.CharField(
         max_length=20,
