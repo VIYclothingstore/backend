@@ -9,6 +9,7 @@ from rest_framework.routers import DefaultRouter
 from delivery.views import (
     AddressesView,
     CreateOrderView,
+    OrderHistoryView,
     SettlementsView,
     WarehousesView,
     WarehouseTypeView,
@@ -173,6 +174,11 @@ urlpatterns = [
         "delivery/orders/create/",
         CreateOrderView.as_view(),
         name="delivery-create",
+    ),
+    path(
+        "delivery/history/",
+        OrderHistoryView.as_view(),
+        name="delivery-history",
     ),
     # PAYMENT
     path(

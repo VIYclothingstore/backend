@@ -1,11 +1,13 @@
 from abc import ABC, abstractmethod
 
+from rest_framework import generics
 from rest_framework.generics import CreateAPIView
 from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
 from config.settings import LIQPAY_PRIVATE_KEY, LIQPAY_PUBLIC_KEY, SERVER_URL
+from delivery.models import Order
 from delivery.nova_post_api_client import NovaPostApiClient
 from delivery.serializers import OrderSerializer
 from order.models import Basket, BasketItem
@@ -133,6 +135,45 @@ class CreateOrderView(CreateAPIView):
                 msg="Your order has been created successfully! Go to checkout!",
                 payment_form=payment_form,
                 order=order.id,
+            ),
+            status=HTTP_200_OK,
+        )
+
+
+class OrderHistoryView(generics.ListAPIView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        orders = Order.objects.filter(user=user)
+        order_data = []
+
+        for order in orders:
+            items = order.wh_items.all()
+            order_info = {
+                "id": order.id,
+                "date": order.created_at,
+                "delivery_status": order.status,
+                "payment_method": order.payment_method,
+                "delivery_method": order.delivery_method,
+                "delivery_branch": order.branch,
+                "delivery_city": order.city,
+                "address": f" {order.street}, {order.apartment}",
+                "items": [
+                    {
+                        "product": item.product.title,
+                        "size_id": item.product.size.all().first().value,
+                        "color_id": item.product.color.all().first().title,
+                        "price": item.product.price,
+                    }
+                    for item in items
+                ],
+            }
+            order_data.append(order_info)
+
+        return Response(
+            data=dict(
+                msg="Your order history has been shown successfully!",
+                order_data=order_data,
             ),
             status=HTTP_200_OK,
         )
