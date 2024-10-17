@@ -20,7 +20,6 @@ class ProductListAPIView(generics.ListAPIView):
 
 
 class AvailableProductStockAPIView(APIView):
-
     def get(self, request, *args, **kwargs):
         cont = WarehouseItem.objects.filter(
             product_id=kwargs["product_id"],

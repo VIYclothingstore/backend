@@ -205,3 +205,4 @@ LIQPAY_PUBLIC_KEY = os.getenv("LIQPAY_PUBLIC_KEY")
 LIQPAY_PRIVATE_KEY = os.getenv("LIQPAY_PRIVATE_KEY")
 LIQPAY_HOST = "https://www.liqpay.ua/api/"
 SERVER_URL = os.getenv("SERVER_URL")
+RESULT_URL = os.getenv("RESULT_URL")

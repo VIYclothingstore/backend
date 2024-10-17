@@ -27,7 +27,6 @@ class CreateBasket(mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericVi
                     status=HTTP_201_CREATED,
                 )
             except Basket.DoesNotExist:
-
                 serializer.save(user=request.user)
                 return Response(
                     {
