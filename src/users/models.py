@@ -13,7 +13,6 @@ from config import settings
 
 
 class CustomUserManager(BaseUserManager):
-
     @staticmethod
     def send_confirmation_email(user):
         email_confirmation = ConfirmationUserEmail.objects.create(user=user)

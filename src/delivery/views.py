@@ -6,7 +6,12 @@ from rest_framework.response import Response
 from rest_framework.status import HTTP_200_OK, HTTP_403_FORBIDDEN, HTTP_404_NOT_FOUND
 from rest_framework.views import APIView
 
-from config.settings import LIQPAY_PRIVATE_KEY, LIQPAY_PUBLIC_KEY, SERVER_URL
+from config.settings import (
+    LIQPAY_PRIVATE_KEY,
+    LIQPAY_PUBLIC_KEY,
+    RESULT_URL,
+    SERVER_URL,
+)
 from delivery.models import Order
 from delivery.nova_post_api_client import NovaPostApiClient
 from delivery.serializers import OrderSerializer
@@ -82,7 +87,6 @@ class CreateOrderView(CreateAPIView):
     serializer_class = OrderSerializer
 
     def post(self, request, *args, **kwargs):
-
         try:
             basket_id = request.data.get("basket_id")
             basket = Basket.objects.get(pk=basket_id)
@@ -126,6 +130,7 @@ class CreateOrderView(CreateAPIView):
             "order_id": str(order.id),
             "public_key": LIQPAY_PUBLIC_KEY,
             "server_url": SERVER_URL,
+            "result_url": RESULT_URL,
         }
 
         payment_form = liqpay.cnb_form(params)
