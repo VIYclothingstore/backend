@@ -7,7 +7,13 @@ jobs:
   code-qality:
     runs-on: ubuntu-latest
     env:
-      DJANGO_SETTINGS_MODULE: src.config.settings
+      DEBUG: 1
+      SERVER_PORT: 8080
+      POSTGRES_USER: test
+      POSTGRES_PASSWORD: test
+      POSTGRES_DB: test_db
+      DB_HOST: db-test
+      DB_PORT: 5432
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
