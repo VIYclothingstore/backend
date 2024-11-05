@@ -28,5 +28,7 @@ jobs:
         run: pip install poetry && poetry install
       - name: Set environment variable for Django settings
         run: echo "DJANGO_SETTINGS_MODULE=src.config.settings" >> $GITHUB_ENV
+      - name: Set working directory
+        run: cd src
       - name: Run tests
         run: poetry run pytest --maxfail=1 --disable-warnings -q  
