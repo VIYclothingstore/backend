@@ -1,44 +1,20 @@
-name: Check code quality and run tests
+name: Check code quality
 
 on:
-  pull_request:
+  - pull_request
 
 jobs:
-  code-quality:
+  code-qality:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Check out code
-        uses: actions/checkout@v4
-
-      - name: Set up Docker
-        run: |
-          sudo apt-get update
-          sudo apt-get remove -y docker docker-engine docker.io containerd runc
-          sudo apt-get install -y apt-transport-https ca-certificates curl software-properties-common
-          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-          sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-          sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-          sudo chmod +x /usr/local/bin/docker-compose
-
-      - name: Build and run Docker containers
-        run: |
-          docker-compose up -d --build
-
-      - name: Wait for db to be ready
-        run: |
-          docker-compose exec db bash -c "while ! pg_isready -U ${{ secrets.POSTGRES_USER }}; do sleep 1; done"
-
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install poetry
+        run: pip install poetry && poetry install
       - name: Run formatters
-        run: |
-          docker-compose exec api poetry run black --check . && docker-compose exec api poetry run isort --check . --profile black
-
-      - name: Run tests in the api container
-        run: |
-          docker-compose exec api bash -c "cd src && poetry run pytest --maxfail=1 --disable-warnings -q"
-
-      - name: Clean up
-        run: docker-compose down
-
+        run: poetry run black --check . && poetry run isort --check . --profile black
+      - name: Tests
+        run: docker compose exec api ./src/ pytest
+      
