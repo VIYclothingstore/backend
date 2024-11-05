@@ -6,41 +6,21 @@ on:
 jobs:
   code-quality:
     runs-on: ubuntu-latest
-    services:
-      db:
-        image: postgres:latest
-        env:
-          POSTGRES_USER: test
-          POSTGRES_PASSWORD: test
-          POSTGRES_DB: test_db
-        ports:
-          - 5432:5432
-
-    env:
-      DEBUG: 1
-      SERVER_PORT: 8080
-      DB_HOST: db
-      DB_PORT: 5432
-
     steps:
       - uses: actions/checkout@v4
-      
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      - name: Build and start services
-        run: docker-compose up -d
-
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
       - name: Install poetry
-        run: pip install poetry && poetry install
-
+        run: |
+          pip install poetry
+          poetry install
       - name: Run formatters
-        run: poetry run black --check . && poetry run isort --check . --profile black
-
+        run: |
+          poetry run black --check .
+          poetry run isort --check . --profile black
       - name: Run tests
-        run: docker-compose exec api ./src/pytest
+        run: |
+          poetry run pytest ./src/  
 
+      
