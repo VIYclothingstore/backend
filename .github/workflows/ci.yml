@@ -15,5 +15,18 @@ jobs:
         run: pip install poetry && poetry install
       - name: Run formatters
         run: poetry run black --check . && poetry run isort --check . --profile black
+
+  run-tests:
+    runs-on: ubuntu-latest
+    needs: code-quality 
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install poetry
+        run: pip install poetry && poetry install
+      - name: Set environment variable for Django settings
+        run: echo "DJANGO_SETTINGS_MODULE=src.config.settings" >> $GITHUB_ENV
       - name: Run tests
-        run: poetry run pytest --maxfail=1 --disable-warnings -q
+        run: poetry run pytest --maxfail=1 --disable-warnings -q  
