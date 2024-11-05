@@ -18,7 +18,7 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
-    needs: code-quality 
+    needs: code-quality
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -26,9 +26,9 @@ jobs:
           python-version: '3.12'
       - name: Install poetry
         run: pip install poetry && poetry install
-      - name: Set environment variable for Django settings
-        run: echo "DJANGO_SETTINGS_MODULE=src.config.settings-test" >> $GITHUB_ENV
       - name: Set PYTHONPATH
         run: echo "PYTHONPATH=src" >> $GITHUB_ENV
+      - name: Set environment variable for Django settings
+        run: echo "DJANGO_SETTINGS_MODULE=src.config.settings-test" >> $GITHUB_ENV
       - name: Run tests
         run: poetry run pytest --maxfail=1 --disable-warnings -q
