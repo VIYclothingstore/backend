@@ -150,8 +150,8 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=40),
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1),
+    "REFRESH_TOKEN_LIFETIME": timedelta(minutes=3),
     "ROTATE_REFRESH_TOKENS": True,
     "BLACKLIST_AFTER_ROTATION": True,
     "ALGORITHM": "HS256",
@@ -192,7 +192,7 @@ UI_URLS = {
     "confirm_reset_password": f'{UI}/{os.getenv("UI_URLS_RESET_PASSWORD", "auth/reset_password")}',
     "confirmed_email": f'{UI}/{os.getenv("UI_URLS_CONFIRM_EMAIL", "auth/confirmed_email")}',
 }
-TOKEN_FOR_EMAIL_LIFETIME = 60
+TOKEN_FOR_EMAIL_LIFETIME = 180
 
 # Nova Noshta
 NOVAPOSHTA_API_SETTINGS = {
