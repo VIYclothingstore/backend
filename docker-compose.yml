@@ -67,5 +67,24 @@ services:
       - "./:/usr/app"
     command: [ "python", "./src/manage.py", "migrate" ]
 
+  tests:
+    container_name: tests
+    build:
+      context: .
+      target: base
+      args:
+        DJANGO_ENV: testing
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    env_file:
+      - .env
+    volumes:
+      - "./:/usr/app"
+    working_dir: /usr/app/src
+    command: ["pytest"]
+
 volumes:
   postgres_data:
