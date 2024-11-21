@@ -23,12 +23,17 @@ jobs:
         run: |
           echo "${{ secrets.GCLOUD_SECRET }}" > $GITHUB_WORKSPACE/gcloud-secret.json
 
+      # Move gcloud-secret.json to expected location
+      - name: Move gcloud-secret.json
+        run: mv $GITHUB_WORKSPACE/gcloud-secret.json /usr/app/gcloud-secret.json
+
       # Run tests
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
           PYTHONPATH: ./src
-          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/gcloud-secret.json
+          GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json
         run: |
           poetry run pytest --cov=src --cov-report=xml
+
 
