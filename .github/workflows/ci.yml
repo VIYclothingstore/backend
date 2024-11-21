@@ -4,33 +4,30 @@ on:
   - pull_request
 
 jobs:
-  code-qality:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
-      # Checkout the code
       - uses: actions/checkout@v4
-
-      # Setup Python
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      # Install Poetry and dependencies
+      
       - name: Install poetry
-        run: |
-          pip install poetry
-          poetry install
+        run: pip install poetry && poetry install
 
-      # Run code formatters
       - name: Run formatters
+        run: poetry run black --check . && poetry run isort --check . --profile black
+
+      # Create gcloud-secret.json
+      - name: Create gcloud-secret.json
         run: |
-          poetry run black --check .
-          poetry run isort --check . --profile black
+          echo "${{ secrets.GCLOUD_SECRET }}" > gcloud-secret.json
 
       # Run tests
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
           PYTHONPATH: ./src
+          GOOGLE_APPLICATION_CREDENTIALS: ./gcloud-secret.json
         run: |
           poetry run pytest --cov=src --cov-report=xml
