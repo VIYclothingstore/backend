@@ -7,33 +7,33 @@ jobs:
   code-quality:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      
-      - name: Install poetry
+
+      - name: Install dependencies
         run: pip install poetry && poetry install
+
+      - name: Create gcloud-secret.json in the container
+        env:
+          GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
+        run: |
+          echo "${GCLOUD_SECRET}" > gcloud-secret.json
+          docker cp gcloud-secret.json api:/usr/app/gcloud-secret.json
 
       - name: Run formatters
         run: poetry run black --check . && poetry run isort --check . --profile black
 
-      # Create gcloud-secret.json
-      - name: Create gcloud-secret.json
-        run: |
-          echo "${{ secrets.GCLOUD_SECRET }}" > $GITHUB_WORKSPACE/gcloud-secret.json
-
-      # Move gcloud-secret.json to expected location
-      - name: Move gcloud-secret.json
-        run: mv $GITHUB_WORKSPACE/gcloud-secret.json /usr/app/gcloud-secret.json
-
-      # Run tests
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
           PYTHONPATH: ./src
           GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json
-        run: |
-          poetry run pytest --cov=src --cov-report=xml
+        run: poetry run pytest --cov=src --cov-report=xml
+
 
 
