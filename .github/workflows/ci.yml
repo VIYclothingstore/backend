@@ -21,13 +21,14 @@ jobs:
       # Create gcloud-secret.json
       - name: Create gcloud-secret.json
         run: |
-          echo "${{ secrets.GCLOUD_SECRET }}" > gcloud-secret.json
+          echo "${{ secrets.GCLOUD_SECRET }}" > $GITHUB_WORKSPACE/gcloud-secret.json
 
       # Run tests
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
           PYTHONPATH: ./src
-          GOOGLE_APPLICATION_CREDENTIALS: ./gcloud-secret.json
+          GOOGLE_APPLICATION_CREDENTIALS: $GITHUB_WORKSPACE/gcloud-secret.json
         run: |
           poetry run pytest --cov=src --cov-report=xml
+
