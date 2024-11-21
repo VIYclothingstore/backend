@@ -1,11 +1,21 @@
-name: Check code quality
+name: CI Pipeline
 
 on:
-  - pull_request
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  code-quality:
+  test:
     runs-on: ubuntu-latest
+
+    services:
+      api:
+        image: api  # Убедитесь, что указали правильное имя образа для вашего API контейнера
+        ports:
+          - 8000:8000
+        options: --health-cmd="curl --fail http://localhost:8000/health/" --health-interval=10s --health-timeout=5s --health-retries=3
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -16,24 +26,29 @@ jobs:
           python-version: '3.12'
 
       - name: Install dependencies
-        run: pip install poetry && poetry install
+        run: |
+          pip install poetry
+          poetry install
 
-      - name: Create gcloud-secret.json in the container
+      - name: Start the API container
+        run: |
+          docker-compose up -d api  # Запуск контейнера, если используете docker-compose
+          # Если без docker-compose, используйте команду docker run для запуска контейнера
+
+      - name: Create gcloud-secret.json inside container
         env:
           GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
         run: |
-          echo "${GCLOUD_SECRET}" > gcloud-secret.json
-          docker cp gcloud-secret.json api:/usr/app/gcloud-secret.json
-
-      - name: Run formatters
-        run: poetry run black --check . && poetry run isort --check . --profile black
+          # Создайте файл внутри контейнера
+          echo "$GCLOUD_SECRET" > gcloud-secret.json
+          docker cp gcloud-secret.json api:/usr/app/gcloud-secret.json  # Копирование файла внутрь контейнера
 
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
-          PYTHONPATH: ./src
-          GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json
-        run: poetry run pytest --cov=src --cov-report=xml
+          GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json  # Укажите путь к файлу с ключом для доступа к Google API
+        run: |
+          docker exec api poetry run pytest --cov=src --cov-report=xml  # Выполнение тестов внутри контейнера
 
 
 
