@@ -6,62 +6,39 @@ on:
       - main
 
 jobs:
-  code-quality-and-tests:
+  build:
     runs-on: ubuntu-latest
+
     services:
-      api:
-        image: api  # Убедитесь, что указали правильное имя образа для вашего API контейнера
-        ports:
-          - 8000:8000
-        options: --health-cmd="curl --fail http://localhost:8000/health/" --health-interval=10s --health-timeout=5s --health-retries=3
+      docker:
+        image: docker:20.10.16
+        options: --privileged
 
     steps:
+      # 1. Клонируем репозиторий
       - uses: actions/checkout@v4
 
-      # Устанавливаем Python 3.12
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      # Устанавливаем Poetry
-      - name: Install poetry
-        run: pip install poetry && poetry install
-
-      # Проверяем код с помощью black и isort
-      - name: Run formatters
+      # 2. Настроим Docker Compose
+      - name: Set up Docker Compose
         run: |
-          poetry run black --check .
-          poetry run isort --check . --profile black
+          curl -L https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
 
-      # Запускаем контейнер API
-      - name: Start the API container
+      # 3. Строим и запускаем контейнеры с использованием Docker Compose
+      - name: Build and start test container
         run: |
-          docker-compose up -d api  # Запуск контейнера с помощью docker-compose
+          docker-compose -f docker-compose.yml up --build -d test  # Запуск контейнера для тестов
 
-      # Проверяем здоровье контейнера
-      - name: Wait for the API container to be healthy
+      # 4. Выполнение тестов в контейнере
+      - name: Run tests inside the test container
         run: |
-          docker ps -q --filter "name=api"  # Убедитесь, что контейнер существует
-          until docker inspect --format '{{.State.Health.Status}}' api | grep -q "healthy"; do
-            echo "Waiting for the container to be healthy..."
-            sleep 5
-          done
+          docker exec -it test_runner poetry run pytest --cov=src --cov-report=xml
 
-      # Создаём gcloud-secret.json внутри контейнера
-      - name: Create gcloud-secret.json inside container
-        env:
-          GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
+      # 5. Останавливаем контейнеры после выполнения тестов
+      - name: Stop containers
         run: |
-          echo "$GCLOUD_SECRET" > gcloud-secret.json
-          docker cp gcloud-secret.json api:/usr/app/gcloud-secret.json  # Копирование файла внутрь контейнера
+          docker-compose down
 
-      # Выполняем тесты внутри контейнера
-      - name: Run tests
-        env:
-          DJANGO_SETTINGS_MODULE: config.settings
-          GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json  # Укажите путь к файлу с ключом для доступа к Google API
-        run: |
-          docker exec api poetry run pytest --cov=src --cov-report=xml  # Выполнение тестов внутри контейнера
 
 
 
