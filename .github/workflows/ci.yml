@@ -6,9 +6,8 @@ on:
       - main
 
 jobs:
-  test:
+  code-quality-and-tests:
     runs-on: ubuntu-latest
-
     services:
       api:
         image: api  # Убедитесь, что указали правильное имя образа для вашего API контейнера
@@ -17,38 +16,53 @@ jobs:
         options: --health-cmd="curl --fail http://localhost:8000/health/" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      # Устанавливаем Python 3.12
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
 
-      - name: Install dependencies
-        run: |
-          pip install poetry
-          poetry install
+      # Устанавливаем Poetry
+      - name: Install poetry
+        run: pip install poetry && poetry install
 
+      # Проверяем код с помощью black и isort
+      - name: Run formatters
+        run: |
+          poetry run black --check .
+          poetry run isort --check . --profile black
+
+      # Запускаем контейнер API
       - name: Start the API container
         run: |
-          docker-compose up -d api  # Запуск контейнера, если используете docker-compose
-          # Если без docker-compose, используйте команду docker run для запуска контейнера
+          docker-compose up -d api  # Запуск контейнера с помощью docker-compose
 
+      # Проверяем здоровье контейнера
+      - name: Wait for the API container to be healthy
+        run: |
+          docker ps -q --filter "name=api"  # Убедитесь, что контейнер существует
+          until docker inspect --format '{{.State.Health.Status}}' api | grep -q "healthy"; do
+            echo "Waiting for the container to be healthy..."
+            sleep 5
+          done
+
+      # Создаём gcloud-secret.json внутри контейнера
       - name: Create gcloud-secret.json inside container
         env:
           GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
         run: |
-          # Создайте файл внутри контейнера
           echo "$GCLOUD_SECRET" > gcloud-secret.json
           docker cp gcloud-secret.json api:/usr/app/gcloud-secret.json  # Копирование файла внутрь контейнера
 
+      # Выполняем тесты внутри контейнера
       - name: Run tests
         env:
           DJANGO_SETTINGS_MODULE: config.settings
           GOOGLE_APPLICATION_CREDENTIALS: /usr/app/gcloud-secret.json  # Укажите путь к файлу с ключом для доступа к Google API
         run: |
           docker exec api poetry run pytest --cov=src --cov-report=xml  # Выполнение тестов внутри контейнера
+
 
 
 
