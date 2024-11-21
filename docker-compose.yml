@@ -24,6 +24,27 @@ services:
       db:
         condition: service_healthy
 
+  test:
+    container_name: test_runner
+    build:
+      context: .
+      target: base
+      args:
+        DJANGO_ENV: test
+    command: [ "pytest", "--cov", "." ]
+    environment:
+      - DJANGO_SETTINGS_MODULE=config.settings
+    volumes:
+      - "./:/usr/app"
+    working_dir: /usr/app/src
+    env_file:
+      - .env
+    depends_on:
+      db:
+        condition: service_healthy
+
+
+
   db:
     image: postgres:16.2
     restart: unless-stopped
@@ -67,24 +88,6 @@ services:
       - "./:/usr/app"
     command: [ "python", "./src/manage.py", "migrate" ]
 
-  tests:
-    container_name: tests
-    build:
-      context: .
-      target: base
-      args:
-        DJANGO_ENV: testing
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      - DJANGO_SETTINGS_MODULE=config.settings
-    env_file:
-      - .env
-    volumes:
-      - "./:/usr/app"
-    working_dir: /usr/app/src
-    command: ["pytest"]
 
 volumes:
   postgres_data:
