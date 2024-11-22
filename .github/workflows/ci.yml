@@ -49,7 +49,7 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    env:  # Добавляем переменные окружения для docker-compose
+    env:  # Переменные окружения, доступные для контейнеров и команд
       SERVER_PORT: 8000
       POSTGRES_USER: admin_user
       POSTGRES_PASSWORD: admin
@@ -89,4 +89,5 @@ jobs:
       # Шаг 7: Запуск тестов
       - name: Run tests
         run: docker-compose run api pytest --cov=.
+
 
