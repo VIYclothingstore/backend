@@ -49,14 +49,6 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
-    env:  # Переменные окружения, доступные для контейнеров и команд
-      SERVER_PORT: 8000
-      POSTGRES_USER: admin_user
-      POSTGRES_PASSWORD: admin
-      POSTGRES_DB: test_clothing_store
-      DB_PORT: 5432
-      DB_HOST: db
-
     steps:
       # Шаг 1: Клонирование кода
       - name: Checkout code
@@ -66,15 +58,25 @@ jobs:
       - name: Set up Docker Compose
         run: sudo apt-get update && sudo apt-get install -y docker-compose
 
-      # Шаг 3: Сборка контейнеров
+      # Шаг 3: Установка переменных окружения для Docker Compose
+      - name: Set environment variables for Docker Compose
+        run: |
+          echo "POSTGRES_USER=admin_user" >> $GITHUB_ENV
+          echo "POSTGRES_PASSWORD=admin" >> $GITHUB_ENV
+          echo "POSTGRES_DB=test_clothing_store" >> $GITHUB_ENV
+          echo "SERVER_PORT=8000" >> $GITHUB_ENV
+          echo "DB_HOST=db" >> $GITHUB_ENV
+          echo "DB_PORT=5432" >> $GITHUB_ENV
+
+      # Шаг 4: Сборка контейнеров
       - name: Build containers
         run: docker-compose build
 
-      # Шаг 4: Запуск базы данных
+      # Шаг 5: Запуск базы данных
       - name: Start database service
         run: docker-compose up -d db
 
-      # Шаг 5: Ожидание готовности базы данных
+      # Шаг 6: Ожидание готовности базы данных
       - name: Wait for Database
         run: |
           until docker-compose exec db pg_isready -U admin_user -d test_clothing_store; do
@@ -82,12 +84,13 @@ jobs:
             sleep 2
           done
 
-      # Шаг 6: Запуск миграций
+      # Шаг 7: Запуск миграций
       - name: Run migrations
         run: docker-compose run api python ./src/manage.py migrate
 
-      # Шаг 7: Запуск тестов
+      # Шаг 8: Запуск тестов
       - name: Run tests
         run: docker-compose run api pytest --cov=.
+
 
 
