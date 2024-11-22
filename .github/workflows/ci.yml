@@ -58,20 +58,19 @@ jobs:
       - name: Set up Docker Compose
         run: sudo apt-get update && sudo apt-get install -y docker-compose
 
-      # Шаг 3: Установка переменных окружения для Docker Compose
-      - name: Set environment variables for Docker Compose
+      # Шаг 3: Установка переменных окружения и создание .env файла
+      - name: Create .env file
         run: |
-          echo "POSTGRES_USER=admin_user" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=admin" >> $GITHUB_ENV
-          echo "POSTGRES_DB=test_clothing_store" >> $GITHUB_ENV
-          echo "SERVER_PORT=8000" >> $GITHUB_ENV
-          echo "DB_HOST=db" >> $GITHUB_ENV
-          echo "DB_PORT=5432" >> $GITHUB_ENV
+          echo "POSTGRES_USER=admin_user" >> .env
+          echo "POSTGRES_PASSWORD=admin" >> .env
+          echo "POSTGRES_DB=test_clothing_store" >> .env
+          echo "SERVER_PORT=8000" >> .env
+          echo "DB_HOST=db" >> .env
+          echo "DB_PORT=5432" >> .env
 
-      # Шаг 4: Сборка контейнеров с передачей переменных окружения
+      # Шаг 4: Сборка контейнеров
       - name: Build containers
-        run: |
-          docker-compose --env-file <(echo POSTGRES_USER=$POSTGRES_USER POSTGRES_PASSWORD=$POSTGRES_PASSWORD POSTGRES_DB=$POSTGRES_DB SERVER_PORT=$SERVER_PORT DB_HOST=$DB_HOST DB_PORT=$DB_PORT) build
+        run: docker-compose --env-file .env build
 
       # Шаг 5: Запуск базы данных
       - name: Start database service
