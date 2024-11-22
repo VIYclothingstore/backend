@@ -68,9 +68,10 @@ jobs:
           echo "DB_HOST=db" >> $GITHUB_ENV
           echo "DB_PORT=5432" >> $GITHUB_ENV
 
-      # Шаг 4: Сборка контейнеров
+      # Шаг 4: Сборка контейнеров с передачей переменных окружения
       - name: Build containers
-        run: docker-compose build
+        run: |
+          docker-compose --env-file <(echo POSTGRES_USER=$POSTGRES_USER POSTGRES_PASSWORD=$POSTGRES_PASSWORD POSTGRES_DB=$POSTGRES_DB SERVER_PORT=$SERVER_PORT DB_HOST=$DB_HOST DB_PORT=$DB_PORT) build
 
       # Шаг 5: Запуск базы данных
       - name: Start database service
