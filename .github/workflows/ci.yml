@@ -49,6 +49,14 @@ jobs:
           --health-timeout=5s
           --health-retries=5
 
+    env:  # Добавляем переменные окружения для docker-compose
+      SERVER_PORT: 8000
+      POSTGRES_USER: admin_user
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: test_clothing_store
+      DB_PORT: 5432
+      DB_HOST: db
+
     steps:
       # Шаг 1: Клонирование кода
       - name: Checkout code
@@ -62,7 +70,7 @@ jobs:
       - name: Build containers
         run: docker-compose build
 
-      # Шаг 4: Запуск зависимостей (только база данных)
+      # Шаг 4: Запуск базы данных
       - name: Start database service
         run: docker-compose up -d db
 
@@ -81,5 +89,4 @@ jobs:
       # Шаг 7: Запуск тестов
       - name: Run tests
         run: docker-compose run api pytest --cov=.
-
 
