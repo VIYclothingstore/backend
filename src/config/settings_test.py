@@ -1,12 +1,13 @@
 # src/config/settings_test.py
 
-from .settings import *  # Импортируем все настройки из основного файла
 import os
+
 from google.oauth2 import service_account
 
+from .settings import *  # Импортируем все настройки из основного файла
+
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    '/Users/jabko/Desktop/projects/backend/gcloud-secret.json'
-    
+    "/Users/jabko/Desktop/projects/backend/gcloud-secret.json"
 )
 # Настройки базы данных для тестов
 DATABASES = {
