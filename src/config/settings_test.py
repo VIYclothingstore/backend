@@ -1,10 +1,8 @@
-# src/config/settings_test.py
-
 import os
 
 from google.oauth2 import service_account
 
-from .settings import *  # Импортируем все настройки из основного файла
+from .settings import *
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.getenv(
@@ -18,12 +16,10 @@ if hasattr(settings, "GS_CREDENTIALS"):
 else:
     # GS_CREDENTIALS not found
     print("GS_CREDENTIALS not found in settings")
-# Настройки базы данных для тестов
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",  # Используем SQLite для тестов
+        "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-
-# Если настройки для базы данных уже есть в settings.py, то их можно не переписывать. Они будут переопределены

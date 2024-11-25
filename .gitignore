@@ -162,4 +162,3 @@ notes
 .DS_Store
 .env
 gcloud-secret.json
-gcloud-secret.base64
