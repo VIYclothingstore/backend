@@ -33,6 +33,11 @@ jobs:
       - name: Set DJANGO_SETTINGS_MODULE to test settings
         run: echo "DJANGO_SETTINGS_MODULE=config.settings_test" >> $GITHUB_ENV
 
+      - name: Set environment variables
+        run: |
+          echo "LIQPAY_PUBLIC_KEY=${{ secrets.LIQPAY_PUBLIC_KEY }}" >> $GITHUB_ENV
+          echo "LIQPAY_PRIVATE_KEY=${{ secrets.LIQPAY_PRIVATE_KEY }}" >> $GITHUB_ENV
+
       - name: Run tests
         run: |
           export GCLOUD_CREDENTIALS_PATH=/tmp/gcloud-secret.json
