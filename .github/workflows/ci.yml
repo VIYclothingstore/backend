@@ -18,7 +18,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: code-quality  # Этот шаг зависит от выполнения job'ы code-quality
+    needs: code-quality  
     steps:
       - uses: actions/checkout@v4
 
@@ -34,9 +34,14 @@ jobs:
       - name: Install poetry dependencies
         run: pip install poetry && poetry install
 
+      - name: Install pytest
+        run: |
+          poetry add --dev pytest  
+
       - name: Change to src directory
-        run: cd src  # Переходим в директорию src
+        run: cd src  
 
       - name: Run tests
         run: |
-          pytest --settings=config.settings_test
+          poetry run pytest --settings=config.settings_test 
+
