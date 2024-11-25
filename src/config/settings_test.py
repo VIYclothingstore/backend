@@ -7,7 +7,10 @@ from google.oauth2 import service_account
 from .settings import *  # Импортируем все настройки из основного файла
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    os.getenv("GCLOUD_CREDENTIALS_PATH", "/Users/jabko/Desktop/projects/backend/gcloud-secret.json")
+    os.getenv(
+        "GCLOUD_CREDENTIALS_PATH",
+        "/Users/jabko/Desktop/projects/backend/gcloud-secret.json",
+    )
 )
 if hasattr(settings, "GS_CREDENTIALS"):
     # GS_CREDENTIALS exists

@@ -39,4 +39,4 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest --settings=src.config.settings_test
+          pytest --settings=config.settings_test
