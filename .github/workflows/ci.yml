@@ -25,7 +25,6 @@ jobs:
       - name: Set up gcloud credentials
         run: |
           echo "${{ secrets.GCLOUD_SECRET }}" > /tmp/gcloud-secret.json
-          export GCLOUD_CREDENTIALS_PATH=/tmp/gcloud-secret.json
         env:
           GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
       
@@ -41,6 +40,7 @@ jobs:
 
       - name: Run tests
         run: |
+          export GCLOUD_CREDENTIALS_PATH=/tmp/gcloud-secret.json
           poetry run pytest src
 
 
