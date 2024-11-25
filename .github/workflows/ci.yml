@@ -24,7 +24,7 @@ jobs:
 
       - name: Set up gcloud credentials
         run: |
-          echo "${{ secrets.GCLOUD_SECRET }}" > gcloud-secret.json
+          echo "${{ secrets.GCLOUD_SECRET }}" > tmp/gcloud-secret.json
         env:
           GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
       
@@ -34,15 +34,10 @@ jobs:
       - name: Install pytest
         run: |
           poetry add --dev pytest 
-      
-      - name: Change to src directory
-        run: cd src 
-      
-      - name: Set DJANGO_SETTINGS_MODULE to test settings
-        run: echo "DJANGO_SETTINGS_MODULE=config.settings_test" >> $GITHUB_ENV 
 
       - name: Run tests
         run: |
+          export DJANGO_SETTINGS_MODULE=config.settings_test
           poetry run pytest src
 
 

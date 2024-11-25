@@ -9,7 +9,7 @@ from .settings import *  # Импортируем все настройки из
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
     os.getenv(
         "GCLOUD_CREDENTIALS_PATH",
-        "/Users/jabko/Desktop/projects/backend/gcloud-secret.json",
+        "/tmp/gcloud-secret.json",
     )
 )
 if hasattr(settings, "GS_CREDENTIALS"):
