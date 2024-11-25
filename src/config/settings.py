@@ -169,7 +169,7 @@ DEFAULT_FILE_STORAGE = "storages.backends.gcloud.GoogleCloudStorage"
 GS_BUCKET_NAME = os.environ.get("GS_BUCKET_NAME")
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "/usr/app/gcloud-secret.json"
+    os.getenv("GCLOUD_CREDENTIALS_PATH", "/usr/app/gcloud-secret.json")
 )
 if hasattr(settings, "GS_CREDENTIALS"):
     # GS_CREDENTIALS exists

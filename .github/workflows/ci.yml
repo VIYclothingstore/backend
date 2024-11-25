@@ -1,96 +1,42 @@
-name: CI Pipeline
+name: Check code quality
 
 on:
   pull_request:
-    branches:
-      - main
 
 jobs:
-  check-code-quality:
+  code-quality:
     runs-on: ubuntu-latest
-
     steps:
-      # Шаг 1: Клонирование кода
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      # Шаг 2: Установка Python
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-
-      # Шаг 3: Установка Poetry
-      - name: Install Poetry
+      - name: Install poetry
         run: pip install poetry && poetry install
-
-      # Шаг 4: Проверка качества кода
       - name: Run formatters
-        run: |
-          poetry run black --check .
-          poetry run isort --check . --profile black
+        run: poetry run black --check . && poetry run isort --check . --profile black
 
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
-    needs: check-code-quality  # Выполняется только после успешной проверки качества кода
-
-    services:
-      db:
-        image: postgres:16.2
-        environment:
-          POSTGRES_USER: admin_user
-          POSTGRES_PASSWORD: admin
-          POSTGRES_DB: test_clothing_store
-        ports:
-          - "5432:5432"  # Порты оставляем как есть в docker-compose.yml
-        options: >-
-          --health-cmd="pg_isready -U admin_user -d test_clothing_store"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=5
-
+    needs: code-quality  # Этот шаг зависит от выполнения job'ы code-quality
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      # Шаг 2: Установка Docker Compose
-      - name: Set up Docker Compose
-        run: sudo apt-get update && sudo apt-get install -y docker-compose
-
-      # Шаг 3: Установка переменных окружения для переопределения портов
-      - name: Set environment variables for ports
+      - name: Set up gcloud credentials
         run: |
-          echo "POSTGRES_USER=admin_user" >> $GITHUB_ENV
-          echo "POSTGRES_PASSWORD=admin" >> $GITHUB_ENV
-          echo "POSTGRES_DB=test_clothing_store" >> $GITHUB_ENV
-          echo "SERVER_PORT=8000" >> $GITHUB_ENV
-          echo "DB_HOST=db" >> $GITHUB_ENV
-          echo "DB_PORT=5433" >> $GITHUB_ENV  # Переопределяем порт для CI
-          
-      # Шаг 4: Сборка контейнеров
-      - name: Build containers
-        run: |
-          docker-compose build
+          echo "${{ secrets.GCLOUD_SECRET }}" > gcloud-secret.json
+        env:
+          GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
 
-      # Шаг 5: Запуск базы данных с переопределением порта
-      - name: Start database service
-        run: |
-          docker-compose up -d db
+      - name: Set DJANGO_SETTINGS_MODULE to test settings
+        run: echo "DJANGO_SETTINGS_MODULE=src.config.settings_test" >> $GITHUB_ENV
 
-      # Шаг 6: Ожидание готовности базы данных
-      - name: Wait for Database
-        run: |
-          until docker-compose exec db pg_isready -U admin_user -d test_clothing_store; do
-            echo "Waiting for database..."
-            sleep 2
-          done
+      - name: Install poetry dependencies
+        run: poetry install
 
-      # Шаг 7: Запуск миграций
-      - name: Run migrations
-        run: docker-compose run api python ./src/manage.py migrate
+      - name: Change to src directory
+        run: cd src  # Переходим в директорию src
 
-      # Шаг 8: Запуск тестов
       - name: Run tests
-        run: docker-compose run api pytest --cov=.
-
-
+        run: |
+          pytest --settings=src.config.settings_test
