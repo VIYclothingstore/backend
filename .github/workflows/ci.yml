@@ -24,7 +24,7 @@ jobs:
 
       - name: Set up gcloud credentials
         run: |
-          echo "${{ secrets.GCLOUD_SECRET }}" > tmp/gcloud-secret.json
+          echo "${{ secrets.GCLOUD_SECRET }}" > /tmp/gcloud-secret.json
         env:
           GCLOUD_SECRET: ${{ secrets.GCLOUD_SECRET }}
       
