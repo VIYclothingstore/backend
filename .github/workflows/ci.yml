@@ -43,5 +43,5 @@ jobs:
 
       - name: Run tests
         run: |
-          poetry run pytest --settings=config.settings_test 
+          poetry run pytest --settings=src.config.settings_test 
 
