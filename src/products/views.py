@@ -55,7 +55,7 @@ class ProductSearchView(generics.ListAPIView):
         if size:
             query &= Q(size__value=size)
         if color:
-            query &= Q(colors__color__title__iexact=color)
+            query &= Q(color__title=color)
         products = ProductItem.objects.filter(query).distinct()
         return products
 

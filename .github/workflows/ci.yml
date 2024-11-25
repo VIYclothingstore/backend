@@ -1,17 +1,47 @@
-name: Check code quality
+name: Check code quality and test execution
 
 on:
-  - pull_request
+  pull_request:
 
 jobs:
-  code-qality:
+  code-quality:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      
       - name: Install poetry
         run: pip install poetry && poetry install
+      
       - name: Run formatters
         run: poetry run black --check . && poetry run isort --check . --profile black
+
+  tests:
+    runs-on: ubuntu-latest
+    needs: code-quality  
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up gcloud credentials
+        run: |
+          echo "${{ secrets.GCLOUD_SECRET_BASE64 }}" | base64 --decode > /tmp/gcloud-secret.json
+      
+      - name: Install poetry dependencies
+        run: pip install poetry && poetry install
+
+      - name: Set DJANGO_SETTINGS_MODULE to test settings
+        run: echo "DJANGO_SETTINGS_MODULE=config.settings_test" >> $GITHUB_ENV
+
+      - name: Set environment variables
+        run: |
+          echo "LIQPAY_PUBLIC_KEY=${{ secrets.LIQPAY_PUBLIC_KEY }}" >> $GITHUB_ENV
+          echo "LIQPAY_PRIVATE_KEY=${{ secrets.LIQPAY_PRIVATE_KEY }}" >> $GITHUB_ENV
+
+      - name: Run tests
+        run: |
+          export GCLOUD_CREDENTIALS_PATH=/tmp/gcloud-secret.json
+          poetry run pytest src
+
+
