@@ -34,10 +34,12 @@ jobs:
       - name: Install pytest
         run: |
           poetry add --dev pytest 
+      
+      - name: Set DJANGO_SETTINGS_MODULE to test settings
+        run: echo "DJANGO_SETTINGS_MODULE=config.settings_test" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
-          export DJANGO_SETTINGS_MODULE=config.settings_test
           poetry run pytest src
 
 
