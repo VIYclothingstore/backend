@@ -32,7 +32,7 @@ jobs:
         run: echo "DJANGO_SETTINGS_MODULE=src.config.settings_test" >> $GITHUB_ENV
 
       - name: Install poetry dependencies
-        run: poetry install
+        run: pip install poetry && poetry install
 
       - name: Change to src directory
         run: cd src  # Переходим в директорию src
