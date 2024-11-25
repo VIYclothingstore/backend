@@ -41,7 +41,11 @@ jobs:
       - name: Change to src directory
         run: cd src  
 
+      - name: Add src to PYTHONPATH
+        run: echo "PYTHONPATH=$(pwd)/src" >> $GITHUB_ENV  
+
       - name: Run tests
         run: |
-          poetry run pytest --settings=src.config.settings_test 
+          poetry run pytest --settings=src.config.settings_test  
+
 
