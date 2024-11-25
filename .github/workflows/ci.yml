@@ -36,7 +36,6 @@ jobs:
       - name: Set environment variables
         run: |
           echo "LIQPAY_PUBLIC_KEY=${{ secrets.LIQPAY_PUBLIC_KEY }}" >> $GITHUB_ENV
-          echo "LIQPAY_PRIVATE_KEY=${{ secrets.LIQPAY_PRIVATE_KEY }}" >> $GITHUB_ENV
 
       - name: Run tests
         run: |
