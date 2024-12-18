@@ -5,23 +5,23 @@ on:
   workflow_dispatch:
 
 jobs:
-#  code-quality:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v4
-#      - uses: actions/setup-python@v5
-#        with:
-#          python-version: '3.10'
-#
-#      - name: Install poetry
-#        run: pip install poetry && poetry install
-#
-#      - name: Run formatters
-#        run: poetry run black --check . && poetry run isort --check . --profile black
+  code-quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+
+      - name: Install poetry
+        run: pip install poetry && poetry install
+
+      - name: Run formatters
+        run: poetry run black --check . && poetry run isort --check . --profile black
 
   tests:
     runs-on: ubuntu-latest
-#    needs: code-quality
+    needs: code-quality
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5

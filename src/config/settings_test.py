@@ -10,12 +10,6 @@ GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
         "/tmp/gcloud-secret.json",
     )
 )
-# if hasattr(settings, "GS_CREDENTIALS"):
-#     # GS_CREDENTIALS exists
-#     print("GS_CREDENTIALS found in settings")
-# else:
-#     # GS_CREDENTIALS not found
-#     print("GS_CREDENTIALS not found in settings")
 
 DATABASES = {
     "default": {
