@@ -61,7 +61,6 @@ def test_user_can_update_phone_number(api_client, test_user_mark):
 
 @pytest.mark.django_db
 def test_user_can_update_own_data(api_client, test_user_mark):
-
     api_client.force_authenticate(user=test_user_mark)
 
     url = reverse("user-retrieve-update-destroy", kwargs={"pk": test_user_mark.id})
@@ -118,7 +117,6 @@ def test_token_obtain_pair_success(api_client, test_user_jon):
 
 @pytest.mark.django_db
 def test_user_can_activation_account(api_client, test_user_mark):
-
     activation_key = uuid.uuid4()
     ConfirmationUserEmail.objects.create(user=test_user_mark, token=activation_key)
 

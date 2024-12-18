@@ -45,6 +45,24 @@ class CreateBasket(mixins.CreateModelMixin, mixins.RetrieveModelMixin, GenericVi
         )
 
 
+def _check_warehouse_availability(data):
+    product_id = data.get("product")
+    color_id = data.get("color")
+    size_id = data.get("size")
+    quantity = data.get("quantity")
+    available_stock = WarehouseItem.objects.filter(
+        product_id=product_id,
+        color_id=color_id,
+        size_id=size_id,
+        status=IN_STOCK,
+    ).count()
+    if available_stock < quantity:
+        return Response(
+            {"detail": "Sorry, but this product is out of stock"},
+            status=HTTP_400_BAD_REQUEST,
+        )
+
+
 class RetrieveUpdateDestroyBasketAPIView(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
@@ -54,23 +72,6 @@ class RetrieveUpdateDestroyBasketAPIView(
     serializer_class = BasketItemSerializer
     queryset = BasketItem.objects.all()
     lookup_url_kwarg = "basket_item_id"
-
-    def _check_warehouse_availability(self, data):
-        product_id = data.get("product")
-        color_id = data.get("color")
-        size_id = data.get("size")
-        quantity = data.get("quantity")
-        available_stock = WarehouseItem.objects.filter(
-            product_id=product_id,
-            color_id=color_id,
-            size_id=size_id,
-            status=IN_STOCK,
-        ).count()
-        if available_stock < quantity:
-            return Response(
-                {"detail": "Sorry, but this product is out of stock"},
-                status=HTTP_400_BAD_REQUEST,
-            )
 
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
@@ -82,7 +83,7 @@ class RetrieveUpdateDestroyBasketAPIView(
             basket=kwargs["basket_id"],
         ).first()
         if existing_item:
-            if warehouse_check_response := self._check_warehouse_availability(
+            if warehouse_check_response := _check_warehouse_availability(
                 {
                     **serializer.validated_data,
                     "quantity": serializer.validated_data["quantity"]
@@ -95,7 +96,7 @@ class RetrieveUpdateDestroyBasketAPIView(
             serializer = self.get_serializer(existing_item)
             return Response(serializer.data, status=HTTP_201_CREATED)
         else:
-            if warehouse_check_response := self._check_warehouse_availability(
+            if warehouse_check_response := _check_warehouse_availability(
                 serializer.validated_data
             ):
                 return warehouse_check_response
@@ -107,7 +108,7 @@ class RetrieveUpdateDestroyBasketAPIView(
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
-        warehouse_check_response = self._check_warehouse_availability(
+        warehouse_check_response = _check_warehouse_availability(
             serializer.validated_data
         )
         if warehouse_check_response:
