@@ -123,7 +123,7 @@ class CreateOrderView(CreateAPIView):
         params = {
             "version": "3",
             "action": "pay",
-            "amount": total_sum_basket_items,
+            "amount": total_sum_basket_items(basket_items),
             "currency": "UAH",
             "description": "TEST",
             "sandbox": 1,
