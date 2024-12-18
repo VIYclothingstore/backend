@@ -3,22 +3,29 @@
 ### [SPORT HUB](https://teamchallenge-sport-store-frontend.vercel.app) is an e-commerce platform for hassle-free shopping.
 
 ### In this project implemented:
+- Product catalogue: structure of presentation, search, sorting, product filters.
 
-##### - Catalog of goods: structure of presentation, search, sorting, filters of goods.
 
-#### - Shopping cart and placing an order: adding goods to the basket, and placing a purchase.
+- Shopping cart and checkout: adding, updating, deleting products to the shopping cart, and checkout.
 
-#### - User profile: possibility of registration, authorization, and management of personal data.
 
-#### - Admin panel: interface for managing the store, adding products, categories, users, etc.
+- User's personal account: the ability to register, confirm the user's email, authorise and manage personal data, view the order history for a certain period.
 
-#### - Integration with API NOVA POST: automatic branch search.
+
+- Admin panel: an interface for managing the store, adding products, categories, users, etc.
+
+
+- Integration with the NOVA POST API: the possibility of delivery by courier, to a branch, and parcel locker.
+
+
+- Integration with LiqPay: the ability to pay by card,  get invoice.
+
 
 ![Logo](docs/logo.png)
 
 ## Stack:
 
-[![My Skills](https://skillicons.dev/icons?i=python,docker,postgres,django,gcp&theme=dark&perline=10)](https://skillicons.dev)
+[![Stack](https://skillicons.dev/icons?i=python,docker,postgres,django,gcp&theme=dark&perline=10)](https://skillicons.dev)
 
 ## Installation:
 
@@ -36,7 +43,7 @@ wish, but make sure that your .env file structured like .env.example.
 ## Start develop with Docker:
 
 Firstly, you need to have Docker installed in your system. If you haven't installed Docker yet,
-visit https://docs.docker.com/get-docker/ .
+visit https://docs.docker.com/get-docker/
 
 ## Commands:
 
@@ -63,18 +70,6 @@ visit https://docs.docker.com/get-docker/ .
 - Run application:
 
       make build_and_run
-
-- Drop all containers:
-
-      make drop_all_containers    
-
-- Create super user:
-
-      make_super_user 
-
-- Show api logs:
-
-      make_open_log
 
 ## DB migration:
 
