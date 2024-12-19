@@ -3,13 +3,15 @@
 ### [SPORT HUB](https://teamchallenge-sport-store-frontend.vercel.app) is an e-commerce platform for hassle-free shopping.
 
 ### In this project implemented:
+
 - Product catalogue: structure of presentation, search, sorting, product filters.
 
 
 - Shopping cart and checkout: adding, updating, deleting products to the shopping cart, and checkout.
 
 
-- User's personal account: the ability to register, confirm the user's email, authorise and manage personal data, view the order history for a certain period.
+- User's personal account: the ability to register, confirm the user's email, authorise and manage personal data, view
+  the order history for a certain period.
 
 
 - Admin panel: an interface for managing the store, adding products, categories, users, etc.
@@ -18,8 +20,7 @@
 - Integration with the NOVA POST API: the possibility of delivery by courier, to a branch, and parcel locker.
 
 
-- Integration with LiqPay: the ability to pay by card,  get invoice.
-
+- Integration with LiqPay: the ability to pay by card, get invoice.
 
 ![Logo](docs/logo.png)
 

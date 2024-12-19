@@ -1,13 +1,10 @@
 import uuid
 
 import pytest
-from django.contrib.auth import get_user_model
 from django.urls import reverse
 from rest_framework import status
 
 from users.models import ConfirmationUserEmail, User
-
-User = get_user_model()
 
 
 @pytest.mark.django_db
