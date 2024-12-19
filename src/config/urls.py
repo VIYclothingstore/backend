@@ -47,7 +47,9 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Sport Hub | SportHub API",
         default_version="v1",
-        contact=openapi.Contact(email="vitasyushchyk@gmail.com"),
+        contact=openapi.Contact(
+            email="vitasyushchyk@gmail.com, chaiunmykola@gmail.com"
+        ),
     ),
     public=True,
     generator_class=BothHttpAndHttpsSchemaGenerator,  # API schema that supports both HTTP and HTTPS protocols.
