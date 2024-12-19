@@ -14,7 +14,6 @@ import os
 from datetime import timedelta
 from pathlib import Path
 
-from django.conf import settings
 from google.oauth2 import service_account
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
